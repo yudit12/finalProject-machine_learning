@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+import csv_handle as csv_org
 #---------------------------------------------------------
 #
 def sort_data_by_country(df,country_name):
@@ -28,6 +28,11 @@ def main():
     print(addional_cols)
 
 
+    XMatrix = csv_org.x_matrix(df)
+    y = csv_org.y_vector(df)
+
+    X_train_matrix, X_test_matrix, y_train_matrix, y_test_matrix \
+        = lgr.divDataByKFold(XMatrix, y, k_parameter=10)  # Define the split - into 10 folds
 
 if __name__ == "__main__":
     main()
