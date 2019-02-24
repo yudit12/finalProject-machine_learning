@@ -63,8 +63,7 @@ def main():
 
     # print(df.shape)
 
-
-    csv_org.split_col_data('result', df)
+    strHandle.split_col_data('result', df)
 
     #print(df)
     print(df.index.tolist())
