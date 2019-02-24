@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import csv_handle as csv_org
 import lgReg_handle as lgr
+import ConvertStrToInt as strHandle
+
 #---------------------------------------------------------
 #
 def sort_data_by_country(df,country_name):
@@ -24,10 +26,14 @@ def main():
     df = pd.read_csv(path)
     country_name = [' Cuba']
     df=sort_data_by_country(df, country_name)
-    print(df)
+    #print(df)
     addional_cols=get_col_feat(df, 'marital-status')
     print(addional_cols)
 
+#    csv_org.split_col_data('result', df)
+    li=[]
+    li=list(range(0,10))
+    print(li)
 
     XMatrix = csv_org.x_matrix(df)
     y = csv_org.y_vector(df)
@@ -35,7 +41,7 @@ def main():
     X_train_matrix, X_test_matrix, y_train_matrix, y_test_matrix \
         = lgr.divDataByKFold(XMatrix, y, k_parameter=10)  # Define the split - into 10 folds
 
-    print(df.shape[0])
+
 
     ''' C_param_range, testErrAllModels,optimalLambda=\
         lgr.k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix,y_test_matrix, k_parameter=10)

@@ -1,9 +1,15 @@
 
 import csv
 import numpy as np
-import ConvertStrToInt as strHandle
 import pandas as pd
 from pandas import DataFrame
+
+
+
+#----
+yes=1
+no=0
+#----
 
 
 #--------------------Methods-----------------------------
@@ -24,12 +30,13 @@ def insert_col_df(df2):
     # --------------------------------------------
     # df2.insert(23, 'Yes', np.nan)
     # df2.insert(24, 'No', np.nan)
-    strHandle.split_col_data('ChestPain', df2)
-    strHandle.split_col_data('Thal', df2)
-    strHandle.split_col_data('AHD', df2)
+    split_col_data('ChestPain', df2)
+    split_col_data('Thal', df2)
+    split_col_data('AHD', df2)
     # afther spliting the cols del the orginal
     df2.__delitem__('ChestPain')
     df2.__delitem__('Thal')
+    df2.to_csv('data.csv', index=False)
     # print(df2.shape)
     # print(df2)
 
@@ -44,7 +51,13 @@ def contain_row(row_num,df):
 
     return rowList
 #---------------------------------------
-
+#Returns col content
+def contain_col(col_num,df):
+    colList = []
+    for j in range(df.shape[0]):# run on the num of rows
+        #col+=str(df.iloc[j][col_num])+" \n"
+        colList.append(df.iloc[j][col_num])
+    return colList
 
 #---------------------------------------
 #A method that checks whether the cell is empty- no information
@@ -83,13 +96,13 @@ def recognizeColByNum(file,col_num):
 #-------------------------------
 #method that replaces an average nan value of the same column
 def replaceNaN(file,col_num,avg):
-    col = strHandle.contain_col(col_num, file)  # create list from row
+    col = contain_col(col_num, file)  # create list from row
     rowNum=0
     colName= recognizeColByNum(file,col_num)
 
     for i in col:
         if isNaN(i):
-            col = strHandle.contain_col(col_num, file)
+            col = contain_col(col_num, file)
             file[colName].at[rowNum] = avg
 
         rowNum+=1
@@ -98,11 +111,11 @@ def replaceNaN(file,col_num,avg):
 
 #A method that normalizes specific col in the file
 def normalization(file, col_num):
-    col = strHandle.contain_col(col_num, file)  # create list from row
+    col = contain_col(col_num, file)  # create list from row
     average,line_count,flagNaN=averageCol(col)
     if flagNaN==1:
         replaceNaN(file,col_num, average)
-        col = strHandle.contain_col(col_num, file)  # create list from row
+        col = contain_col(col_num, file)  # create list from row
         average, line_count, flagNaN = averageCol(col)
     standard_deviation=0
     index=0
@@ -125,14 +138,89 @@ def normalization(file, col_num):
 
 
 # -------------------------------
+#A method that splits the column with string categories  the colums as number of categories
+# it has, each new column receives the value of the category,
+# the cells in the column are marked with one where the category is the same in the original column and the rest  is zero
+def split_col_data(col_name,df2):
+     length= df2.shape[0]
+     col_num =df2.columns.get_loc(col_name)
+     if col_name=='ChestPain':
+         col=contain_col(col_num, df2)
+         for i in range(length):
+             if  col[i]=='typical':
+                 df2['typical'].at[i]=1
+                 df2['asymptomatic'].at[i]=0
+                 df2['nonanginal'].at[i]=0
+                 df2['nontypical'].at[i]=0
+             elif col[i]=='asymptomatic':
+                 df2['typical'].at[i] = 0
+                 df2['asymptomatic'].at[i] = 1
+                 df2['nonanginal'].at[i] = 0
+                 df2['nontypical'].at[i] = 0
+             elif col[i] == 'nonanginal':
+                 df2['typical'].at[i] = 0
+                 df2['asymptomatic'].at[i] = 0
+                 df2['nonanginal'].at[i] = 1
+                 df2['nontypical'].at[i] = 0
+             elif col[i] == 'nontypical':
+                 df2['typical'].at[i] = 0
+                 df2['asymptomatic'].at[i] = 0
+                 df2['nonanginal'].at[i] = 0
+                 df2['nontypical'].at[i] = 1
+     if col_name =='Thal':
+         col= contain_col(col_num,df2)
+         for i in range(length):
+             if col[i] == 'fixed':
+                 df2['fixed'].at[i] = 1
+                 df2['normal'].at[i] = 0
+                 df2['reversable'].at[i] = 0
+             elif isNaN(col[i]):
+                 df2['fixed'].at[i] = np.nan
+                 df2['normal'].at[i] = np.nan
+                 df2['reversable'].at[i] = np.nan
+             elif col[i] == 'normal':
+                 df2['fixed'].at[i] = 0
+                 df2['normal'].at[i] = 1
+                 df2['reversable'].at[i] = 0
+             elif col[i] == 'reversable':
+                 df2['fixed'].at[i] = 0
+                 df2['normal'].at[i] = 0
+                 df2['reversable'].at[i] = 1
+     if col_name =='AHD':
+             col = contain_col(col_num, df2)
+             for i in range(length):
+                 if col[i] == 'Yes':
+                     df2['AHD'].at[i] = 1
+                  #   col[i] = yes
+                 elif col[i] == 'No':
+                     df2['AHD'].at[i] = 0
+                  #   col[i] = no
 
+     if col_name == 'result':
+         col = contain_col(col_num, df2)
+         print("i: " + df2['result'])
+         for i in range(length):
+             #print(i+""+)
+             if col[i] == ' <=50K':  # Less than 50k or equal
+                 df2['result'].at[i] = 0
+             elif col[i] == ' >50K':
+                 df2['result'].at[i] = 1  # more than 50k
+
+     print("*%")
+     print( df2['result'])
+     print(len(df2['result']))
+
+
+     print("$")
+
+# -------------------------------
 
 
 #A method that normalizes all cols in the file
 def normalizationAll(file):
     colNum=file.shape[1]
     for colIndex in range(2,colNum-1):  # run on the num of cols WITHOUT V_ONE
-        colLine = strHandle.contain_col(colIndex, file)
+        colLine = contain_col(colIndex, file)
         normalization(file, colIndex)
 
 #---------------------------------

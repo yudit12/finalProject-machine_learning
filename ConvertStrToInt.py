@@ -68,8 +68,10 @@ def split_col_data(col_name,df):
              for i in range(length):
                  if col[i] == ' <=50K':#Less than 50k or equal
                      df['result'].at[i] = 0
+                     print(df['result'].at[i])
                  elif col[i] == ' >50K':
                      df['result'].at[i] = 1#more than 50k
-
-
+     print('***********')
+     print(contain_col(col_num, df))
+     print('***********')
 # -------------------------------
