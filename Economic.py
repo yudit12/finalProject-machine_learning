@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
-
+import csv_handle as csv_org
+import lgReg_handle as lgr
 #---------------------------------------------------------
 #
 def sort_data_by_country(df,country_name):
@@ -72,6 +73,21 @@ def main():
 
 
 
+
+    XMatrix = csv_org.x_matrix(df)
+    y = csv_org.y_vector(df)
+
+    X_train_matrix, X_test_matrix, y_train_matrix, y_test_matrix \
+        = lgr.divDataByKFold(XMatrix, y, k_parameter=10)  # Define the split - into 10 folds
+
+    print(df.shape[0])
+
+    ''' C_param_range, testErrAllModels,optimalLambda=\
+        lgr.k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix,y_test_matrix, k_parameter=10)
+
+
+    lgr.draw_graph(C_param_range, testErrAllModels)
+    lgr.raph_learning_groups(XMatrix,y,optimalLambda)'''
 
 
 if __name__ == "__main__":
