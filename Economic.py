@@ -32,22 +32,45 @@ def get_col_name(df,col_name):
     return
 
 #---------------------------------------------------------
+
+
+
+
+#--------------------------------------------------
 # insert on col to df split to the col feathers
-def insert_col(df,start_col,feat):
+def insert_col(df,name,start_col,feat):
     for val in feat:
         if val!=' ?':
-            df.insert(start_col, val, np.nan)
+            df.insert(start_col, val, 0)
             start_col = start_col + 1
-#    df.to_csv('data.csv',index=False)
+    # length = df.shape[0]
+    # print(feat)
+    # col_val=list(df['workclass'])
+    # for i in range(length):
+    #     for v in feat:
+    #         print(v)
+    #         if col_val[i]==v:
+    #             if val != ' ?':
+    #                 df[val].at[i]=1
+
+
+    df.to_csv('data.csv',index=False)
+
 
 #---------------------------------------------------------
 # get list of col to split and  insert them to the df
 def insert_all_col(df,col_list):
     for val  in col_list:
         feat=get_col_feat(df,val)
-        index, name = get_col_name(df, val)  # index= num of col in real loc of df
+        # index, name = get_col_name(df, val)  # index= num of col in real loc of df
+        index = df.columns.get_loc(val)
         # print(feat, len(feat))
-        insert_col(df, index + 1, feat)
+        insert_col(df,val, index + 1, feat)
+
+
+
+
+    return df
 
 #----------------------------------------------------------------
 def main():
@@ -55,33 +78,38 @@ def main():
     df = pd.read_csv(path)
     country_name = [' Cuba']
     df=sort_data_by_country(df, country_name)
-    # print(df)
-    print(df.shape)
-
     col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'result']
     insert_all_col(df, col_to_split)
-
     # print(df.shape)
-
-
-    csv_org.split_col_data('result', df)
-
-
-
-    XMatrix = csv_org.x_matrix(df)
-    y = csv_org.y_vector(df)
-
-    X_train_matrix, X_test_matrix, y_train_matrix, y_test_matrix \
-        = lgr.divDataByKFold(XMatrix, y, k_parameter=10)  # Define the split - into 10 folds
+    col_num = df.columns.get_loc('workclass')
+    print(col_num)
+    print(list(df['workclass']))
 
 
 
-    ''' C_param_range, testErrAllModels,optimalLambda=\
-        lgr.k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix,y_test_matrix, k_parameter=10)
 
 
-    lgr.draw_graph(C_param_range, testErrAllModels)
-    lgr.raph_learning_groups(XMatrix,y,optimalLambda)'''
+
+
+#----------------------------------------------------------------------------------------
+    # csv_org.split_col_data('result', df)
+    #
+    #
+    #
+    # XMatrix = csv_org.x_matrix(df)
+    # y = csv_org.y_vector(df)
+    #
+    # X_train_matrix, X_test_matrix, y_train_matrix, y_test_matrix \
+    #     = lgr.divDataByKFold(XMatrix, y, k_parameter=10)  # Define the split - into 10 folds
+    #
+    #
+    #
+    # ''' C_param_range, testErrAllModels,optimalLambda=\
+    #     lgr.k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix,y_test_matrix, k_parameter=10)
+    #
+    #
+    # lgr.draw_graph(C_param_range, testErrAllModels)
+    # lgr.raph_learning_groups(XMatrix,y,optimalLambda)'''
 
 
 if __name__ == "__main__":
