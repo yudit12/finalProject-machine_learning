@@ -55,19 +55,18 @@ def main():
     df = pd.read_csv(path)
     country_name = [' Cuba']
     df=sort_data_by_country(df, country_name)
-
-
-    addional_cols=get_col_feat(df, 'marital-status')
-    print(addional_cols)
-
+    # print(df)
+    print(df.shape)
 
     col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'result']
     insert_all_col(df, col_to_split)
 
+    # print(df.shape)
 
 
 
-#    csv_org.split_col_data('result', df)
+#----------------------------------------------------------------------------
+    #    csv_org.split_col_data('result', df)
     li=[]
     li=list(range(0,10))
     print(li)
