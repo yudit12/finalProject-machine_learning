@@ -144,77 +144,19 @@ def normalization(file, col_num):
 def split_col_data(col_name,df2):
      length= df2.shape[0]
      col_num =df2.columns.get_loc(col_name)
-     if col_name=='ChestPain':
-         col=contain_col(col_num, df2)
-         for i in range(length):
-             if  col[i]=='typical':
-                 df2['typical'].at[i]=1
-                 df2['asymptomatic'].at[i]=0
-                 df2['nonanginal'].at[i]=0
-                 df2['nontypical'].at[i]=0
-             elif col[i]=='asymptomatic':
-                 df2['typical'].at[i] = 0
-                 df2['asymptomatic'].at[i] = 1
-                 df2['nonanginal'].at[i] = 0
-                 df2['nontypical'].at[i] = 0
-             elif col[i] == 'nonanginal':
-                 df2['typical'].at[i] = 0
-                 df2['asymptomatic'].at[i] = 0
-                 df2['nonanginal'].at[i] = 1
-                 df2['nontypical'].at[i] = 0
-             elif col[i] == 'nontypical':
-                 df2['typical'].at[i] = 0
-                 df2['asymptomatic'].at[i] = 0
-                 df2['nonanginal'].at[i] = 0
-                 df2['nontypical'].at[i] = 1
-     if col_name =='Thal':
-         col= contain_col(col_num,df2)
-         for i in range(length):
-             if col[i] == 'fixed':
-                 df2['fixed'].at[i] = 1
-                 df2['normal'].at[i] = 0
-                 df2['reversable'].at[i] = 0
-             elif isNaN(col[i]):
-                 df2['fixed'].at[i] = np.nan
-                 df2['normal'].at[i] = np.nan
-                 df2['reversable'].at[i] = np.nan
-             elif col[i] == 'normal':
-                 df2['fixed'].at[i] = 0
-                 df2['normal'].at[i] = 1
-                 df2['reversable'].at[i] = 0
-             elif col[i] == 'reversable':
-                 df2['fixed'].at[i] = 0
-                 df2['normal'].at[i] = 0
-                 df2['reversable'].at[i] = 1
-     if col_name =='AHD':
-             col = contain_col(col_num, df2)
-             for i in range(length):
-                 if col[i] == 'Yes':
-                     df2['AHD'].at[i] = 1
-                  #   col[i] = yes
-                 elif col[i] == 'No':
-                     df2['AHD'].at[i] = 0
-                  #   col[i] = no
+     index=df2.index.tolist()
+     col = contain_col(col_num, df2)
 
      if col_name == 'result':
-         col = contain_col(col_num, df2)
-         resetIndex = list(range(0, length))
-         df2.set_index([pd.Index(resetIndex), 'result'])
-         print(df2['result'])
-
-         for i in range(length):
-             #print(i+""+)
-             if col[i] == ' <=50K':  # Less than 50k or equal
+         indexCol=0
+         for i in index:
+             if col[indexCol] == ' <=50K':  # Less than 50k or equal
                  df2['result'].at[i] = 0
-             elif col[i] == ' >50K':
+             elif col[indexCol] == ' >50K':
                  df2['result'].at[i] = 1  # more than 50k
-
-     print("*%")
-     print( df2['result'])
-     print(len(df2['result']))
+             indexCol += 1
 
 
-     print("$")
 
 # -------------------------------
 

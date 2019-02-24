@@ -66,7 +66,8 @@ def main():
 
     csv_org.split_col_data('result', df)
 
-
+    #print(df)
+    print(df.index.tolist())
 
     XMatrix = csv_org.x_matrix(df)
     y = csv_org.y_vector(df)
