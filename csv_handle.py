@@ -198,7 +198,10 @@ def split_col_data(col_name,df2):
 
      if col_name == 'result':
          col = contain_col(col_num, df2)
-         print("i: " + df2['result'])
+         resetIndex = list(range(0, length))
+         df2.set_index([pd.Index(resetIndex), 'result'])
+         print(df2['result'])
+
          for i in range(length):
              #print(i+""+)
              if col[i] == ' <=50K':  # Less than 50k or equal

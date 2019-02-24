@@ -38,7 +38,7 @@ def insert_col(df,start_col,feat):
         if val!=' ?':
             df.insert(start_col, val, np.nan)
             start_col = start_col + 1
-    df.to_csv('data.csv',index=False)
+#    df.to_csv('data.csv',index=False)
 
 #---------------------------------------------------------
 # get list of col to split and  insert them to the df
@@ -67,10 +67,8 @@ def main():
 
 
 
-#    csv_org.split_col_data('result', df)
-    li=[]
-    li=list(range(0,10))
-    print(li)
+    csv_org.split_col_data('result', df)
+    #li=[]
 
     XMatrix = csv_org.x_matrix(df)
     y = csv_org.y_vector(df)
