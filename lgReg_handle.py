@@ -65,13 +65,13 @@ def indexMinElement(vec):  # return the index of min element in vector
 def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_test_matrix, k_parameter=10):
 
 
-    C_param_range = [ np.inf,10000,1000, 100, 10, 1, 0.5,(1/3),0.1]
+
+    C_param_range = [ np.inf, 10, 1, 0.5,(1/3),0.1]
     testErrOneModel = [0.0] * k_parameter
     testErrAllModels = []
-    logreg = LogisticRegression(C=10000, solver='lbfgs', penalty='l2')
-    #logreg.fit(X_train_matrix[0], y_train_matrix[0])
 
-    '''
+
+
     for c in C_param_range:
         for i in range(k_parameter):
 
@@ -91,8 +91,7 @@ def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_tes
     print('The average error of the model with lambda=0 is:', testErrAllModels[0])
 
     return(C_param_range,testErrAllModels,optimalLambda)
-'''
-    return (0,0,0)
+
 
 
 # ------------------------------------------------------------------------
@@ -113,12 +112,15 @@ def draw_graph(C_param_range, testErrAllModels):
     plt.legend()
     plt.show()
 
-def raph_learning_groups(XMatrix,y,optimalLambda):
-    learningGroups=np.array(range(10,210,10))
+def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow):
+    learNum=int(numAllRow*0.7)
+    #print("learNum",learNum)
+   # print("rang ",list(range(10,learNum,10)))
+    learningGroups=np.array(range(10,learNum,10))
     errAvg = []
     errAvgTrain=[]
-    xTestMatrix=XMatrix[201:]
-    yTestVec = y[201:]
+    xTestMatrix=XMatrix[learNum:]
+    yTestVec = y[learNum:]
     for rowTrains in learningGroups:
         xTrainMatrix=XMatrix[0:rowTrains]
         yTraintVec=y[0:rowTrains]
