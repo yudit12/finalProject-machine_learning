@@ -68,7 +68,10 @@ def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_tes
     C_param_range = [ np.inf,10000,1000, 100, 10, 1, 0.5,(1/3),0.1]
     testErrOneModel = [0.0] * k_parameter
     testErrAllModels = []
+    logreg = LogisticRegression(C=10000, solver='lbfgs', penalty='l2')
+    #logreg.fit(X_train_matrix[0], y_train_matrix[0])
 
+    '''
     for c in C_param_range:
         for i in range(k_parameter):
 
@@ -78,7 +81,7 @@ def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_tes
         avgErr=np.mean(testErrOneModel)
         print('The average error value of lambda=',1/c,'is',avgErr)
         testErrAllModels.append(avgErr)
-
+    
     indexBetterModel = indexMinElement(testErrAllModels)
 
     optimalLambda = C_param_range[indexBetterModel]
@@ -88,6 +91,8 @@ def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_tes
     print('The average error of the model with lambda=0 is:', testErrAllModels[0])
 
     return(C_param_range,testErrAllModels,optimalLambda)
+'''
+    return (0,0,0)
 
 
 # ------------------------------------------------------------------------

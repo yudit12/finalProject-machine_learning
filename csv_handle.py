@@ -111,15 +111,7 @@ def insert_all_col(df,col_list):
         if len(feat)==2:
             handle_2optionCol(df, val, feat)
 
-
-
-
     del_col(df, col_list)
-
-
-
-
-
 
 
     return df
