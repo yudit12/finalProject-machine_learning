@@ -53,7 +53,7 @@ def insert_col(df,name,start_col,feat):
     #                 df[val].at[i]=1
 
 
-    df.to_csv('data.csv',index=False)
+#    df.to_csv('data.csv',index=False)
 
 
 #---------------------------------------------------------
@@ -84,10 +84,11 @@ def main():
     print(col_num)
     print(list(df['workclass']))
 
-    csv_org.split_col_data('result', df)
+    csv_org.split_col_data('result',' <=50K',' >50K', df)
+    csv_org.split_col_data('sex',' Male',' Female', df)
 
-
-    print(df.index.tolist())
+    df.to_csv('data.csv', index=False)
+   # print(df.index.tolist())
 
     XMatrix = csv_org.x_matrix(df)
     y = csv_org.y_vector(df)

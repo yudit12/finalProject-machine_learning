@@ -37,40 +37,23 @@ def isNaN(val):
     return val != val or val==''
 #---------------------------------------
 
-#Returns col content
-def contain_col(col_num,df):
-    colList = []
-    for j in range(df.shape[0]):# run on the num of rows
-        #col+=str(df.iloc[j][col_num])+" \n"
-        colList.append(df.iloc[j][col_num])
-    return colList
+
 #------------------------------------------------
+#Accepts columns that have only 2 different values
+#Changing one of the values to 0 and the second to 1
+def split_col_data(colName,val1,val2, df):
 
-#A method that splits the column with string categories  the colums as number of categories
-# it has, each new column receives the value of the category,
-# the cells in the column are marked with one where the category is the same in the original column and the rest  is zero
-def split_col_data(col_name, df):
-    length = df.shape[0]
-    col_num = df.columns.get_loc(col_name)
+
     index = df.index.tolist()
-    col = contain_col(col_num, df)
+    col=list(df[colName])
+    indexCol = 0
+    for i in index:
+        if col[indexCol] == val1:  # Less than 50k or equal
+            df[colName].at[i] = 0
+        elif col[indexCol] == val2:
+            df[colName].at[i] = 1  # more than 50k
+        indexCol += 1
 
-    if col_name == 'result':
-        indexCol = 0
-        for i in index:
-            if col[indexCol] == ' <=50K':  # Less than 50k or equal
-                df[col_name].at[i] = 0
-            elif col[indexCol] == ' >50K':
-                df[col_name].at[i] = 1  # more than 50k
-            indexCol += 1
-    if col_name == 'sex':
-        indexCol = 0
-        for i in index:
-            if col[indexCol] == ' Male':  # Less than 50k or equal
-                df[col_name].at[i] = 0
-            elif col[indexCol] == ' Female':
-                df[col_name].at[i] = 1  # more than 50k
-            indexCol += 1
 
 
 #-------------------------------------------------------------------
@@ -112,22 +95,25 @@ def averageCol(col):
 #-------------------------------
 
 #A method that receives a column number and returns the name of that column
+'''
 def recognizeColByNum(file,col_num):
 
     header=list(file.columns.values)
     colName=header[col_num]
 
-    return colName
+    return colName'''
 #-------------------------------
 #method that replaces an average nan value of the same column
-def replaceNaN(file,col_num,avg):
-    col = contain_col(col_num, file)  # create list from row
+def replaceNaN(file,colName,avg):
+    #=file.iloc[0,col_num]
+    #print(col_num," ",col_name," ")
+    col=list(file[colName]) # create list from row
     rowNum=0
-    colName= recognizeColByNum(file,col_num)
+    #colName= recognizeColByNum(file,col_num)
 
     for i in col:
         if isNaN(i):
-            col = contain_col(col_num, file)
+            #col = list(file[col_name])
             file[colName].at[rowNum] = avg
 
         rowNum+=1
@@ -136,11 +122,14 @@ def replaceNaN(file,col_num,avg):
 
 #A method that normalizes specific col in the file
 def normalization(file, col_num):
-    col = contain_col(col_num, file)  # create list from row
+    colName = file.iloc[0, col_num]
+    col = list(file[colName])
+    #col = contain_col(col_num, file)  # create list from row
     average,line_count,flagNaN=averageCol(col)
     if flagNaN==1:
-        replaceNaN(file,col_num, average)
-        col = contain_col(col_num, file)  # create list from row
+        replaceNaN(file,colName, average)
+        col = list(file[colName])
+        #col = contain_col(col_num, file)  # create list from row
         average, line_count, flagNaN = averageCol(col)
     standard_deviation=0
     index=0
@@ -158,7 +147,7 @@ def normalization(file, col_num):
         tmp/= standard_deviation
         normalization_col[index]=tmp
         index+=1
-    colName = recognizeColByNum(file, col_num)
+    #colName = recognizeColByNum(file, col_num)
     file[colName]=normalization_col#Updating the column to be normalized
 
 
@@ -170,7 +159,7 @@ def normalization(file, col_num):
 def normalizationAll(file):
     colNum=file.shape[1]
     for colIndex in range(2,colNum-1):  # run on the num of cols WITHOUT V_ONE
-        colLine = contain_col(colIndex, file)
+        #colLine = contain_col(colIndex, file)
         normalization(file, colIndex)
 
 #---------------------------------
