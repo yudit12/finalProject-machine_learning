@@ -69,6 +69,7 @@ def insert_col(df,name,start_col,feat):
 
 
 
+
 #-----------------------------------------------------------
 def del_col(df,col_list):
     for val in col_list:
@@ -112,10 +113,11 @@ def main():
     # print(col_num)
     #
 
-    csv_org.split_col_data('result', df)
+    csv_org.split_col_data('result',' <=50K',' >50K', df)
+    csv_org.split_col_data('sex',' Male',' Female', df)
 
+    df.to_csv('data.csv', index=False)
 
-    # print(df.index.tolist())
 
     XMatrix = csv_org.x_matrix(df)
     y = csv_org.y_vector(df)
