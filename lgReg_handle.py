@@ -66,7 +66,8 @@ def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_tes
 
 
 
-    C_param_range = [ np.inf, 10, 1, 0.5,(1/3),0.1]
+    #C_param_range = [ np.inf, 10, 1, 0.5,(1/3),0.1]
+    C_param_range = [ 10, 1, 0.5,(1/3),0.1]
     testErrOneModel = [0.0] * k_parameter
     testErrAllModels = []
 
@@ -88,7 +89,7 @@ def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_tes
     print('')
     print('The optimal lambda', 1/optimalLambda)
     print('The average error of the model with this lambda is:', testErrAllModels[indexBetterModel])
-    print('The average error of the model with lambda=0 is:', testErrAllModels[0])
+  #  print('The average error of the model with lambda=0 is:', testErrAllModels[0])
 
     return(C_param_range,testErrAllModels,optimalLambda)
 
@@ -114,13 +115,15 @@ def draw_graph(C_param_range, testErrAllModels):
 
 def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow):
     learNum=int(numAllRow*0.7)
-    #print("learNum",learNum)
-   # print("rang ",list(range(10,learNum,10)))
+    learNum=int(learNum/10)*10+1
+    print("learNum",learNum)
+    print("rang ",list(range(10,learNum,10)))
     learningGroups=np.array(range(10,learNum,10))
     errAvg = []
     errAvgTrain=[]
     xTestMatrix=XMatrix[learNum:]
     yTestVec = y[learNum:]
+    print("len test",len(yTestVec))
     for rowTrains in learningGroups:
         xTrainMatrix=XMatrix[0:rowTrains]
         yTraintVec=y[0:rowTrains]

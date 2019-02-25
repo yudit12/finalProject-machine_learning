@@ -14,11 +14,11 @@ def isNaN(val):
 
 #---------------------------------------------------------
 
-def sort_data_by_country(df,country_name):
+def filter_data_by_feature(df,colName,feat_name):
     # from all data get data only on spesifc country
-    col_name = 'native-country'
+
     # df.sort_values(by=col_name, ascending=False)
-    by_country = df.loc[df[col_name].isin(country_name)]
+    by_country = df.loc[df[colName].isin(feat_name)]
     return by_country
 #-----------------------------------------------
 # returm the feat in the colum withot duplicates - to know how many column  add to the df

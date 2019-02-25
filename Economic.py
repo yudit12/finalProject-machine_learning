@@ -7,14 +7,17 @@ import lgReg_handle as lgr
 def main():
     path = 'economic_data.csv'
     df = pd.read_csv(path)
-    country_name = [' Cuba']
-    df=csv_org.sort_data_by_country(df, country_name)
+    #fillter = [' Cuba',' China',' Germany']
+    fillter = [' Female']
+    df=csv_org.filter_data_by_feature(df, 'sex',fillter)
     # print(df.shape)
     df = df.reset_index(drop=True)
-    # df.to_csv('data.csv', index=False)
+    df.to_csv('data.csv', index=False)
     #print(df)
+    '''
     col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex','native-country', 'result']
     csv_org.insert_all_col(df, col_to_split)
+    
     csv_org.normalizationAll(df)# normalization data
 
     df.to_csv('data.csv', index=False)
@@ -29,11 +32,11 @@ def main():
     C_param_range, testErrAllModels,optimalLambda=\
         lgr.k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix,y_test_matrix, k_parameter=10)
 
-   # print("len ",len(y))
+    print("len ",len(y))
     lgr.draw_graph(C_param_range, testErrAllModels)
     lgr.graph_learning_groups(XMatrix,y,optimalLambda,len(y))
 
-
+'''
 if __name__ == "__main__":
     main()
 
