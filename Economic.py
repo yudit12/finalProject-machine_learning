@@ -9,17 +9,19 @@ def main():
     df = pd.read_csv(path)
     country_name = [' Cuba']
     df=csv_org.sort_data_by_country(df, country_name)
-    print(df.shape)
+    # print(df.shape)
     col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex','native-country', 'result']
     csv_org.insert_all_col(df, col_to_split)
+    csv_org.normalizationAll(df)# normalization data
+
     # print(df.shape)
     # col_num = df.columns.get_loc('workclass')
     # print(col_num)
     #
 
-    print(df.shape)
-    csv_org.two_option_col('result',' <=50K',' >50K', df)
-    csv_org.two_option_col('sex',' Male',' Female', df)
+    # print(df.shape)
+    # csv_org.two_option_col('result',' <=50K',' >50K', df)
+    # csv_org.two_option_col('sex',' Male',' Female', df)
 
     df.to_csv('data.csv', index=False)
 

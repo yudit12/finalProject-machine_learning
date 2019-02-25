@@ -237,9 +237,13 @@ def replaceNaN(file,colName,avg):
 #-------------------------------
 
 #A method that normalizes specific col in the file
-def normalization(file, col_num):
-    colName = file.iloc[0, col_num]
+def normalization(file,colName):
+
+    print(colName)
+
+
     col = list(file[colName])
+    print(col)
     #col = contain_col(col_num, file)  # create list from row
     average,line_count,flagNaN=averageCol(col)
     if flagNaN==1:
@@ -274,9 +278,11 @@ def normalization(file, col_num):
 #A method that normalizes all cols in the file
 def normalizationAll(file):
     colNum=file.shape[1]
-    for colIndex in range(2,colNum-1):  # run on the num of cols WITHOUT V_ONE
+    for colIndex in range(0,colNum-1):  # run on the num of cols WITHOUT V_ONE
         #colLine = contain_col(colIndex, file)
-        normalization(file, colIndex)
+        labelList=list(file);
+        normalization(file,labelList[colIndex])
+    #normalization(file,"Handlers-cleaners")
 
 #---------------------------------
 # method that return only x matrix from the ds (data frame) file
