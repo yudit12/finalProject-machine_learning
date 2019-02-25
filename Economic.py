@@ -48,7 +48,7 @@ def enter_val_toCol(df, name,feat):
                 if v != ' ?':
                     df[v].at[index[i]] = 0
                     if col_val[i] == ' ?':  # if ther is '?'  in thlist col enter in the split col -1
-                        df[v].at[index[i]] = -1
+                        df[v].at[index[i]] = ' ?'
 
 
 #--------------------------------------------------
@@ -72,7 +72,7 @@ def insert_col(df,name,start_col,feat):
 
     for val in feat:
         if val!=' ?':
-            df.insert(start_col, val,np.nan)
+            df.insert(start_col, val,' ')
             start_col = start_col + 1
     #enter needed val in the  new cols
     enter_val_toCol(df, name, feat)
@@ -89,6 +89,7 @@ def del_col(df,col_list):
         feat = get_col_feat(df, val)
         if len(feat) > 2:
             df.__delitem__(val)
+
     df.__delitem__('native-country')
 
 
@@ -105,9 +106,6 @@ def insert_all_col(df,col_list):
             insert_col(df,val, index + 1, feat)
         if len(feat)==2:
             handle_2optionCol(df, val, feat)
-
-
-
 
     del_col(df, col_list)
 

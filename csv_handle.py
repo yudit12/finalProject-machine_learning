@@ -47,8 +47,8 @@ def two_option_col(colName,val1,val2, df):
 
     index = df.index.tolist()
     col=list(df[colName])
-    print("colName ",colName," col ",col)
-    print("all index ", index)
+    # print("colName ",colName," col ",col)
+    # print("all index ", index)
     indexCol = 0
     for i in index:
         if col[indexCol] == val1:
@@ -57,8 +57,8 @@ def two_option_col(colName,val1,val2, df):
             df[colName].at[i] = 1
         indexCol += 1
 
-    print("col after: ", df[colName])
-    print(df)
+    # print("col after: ", df[colName])
+    # print(df)
 
 
 
