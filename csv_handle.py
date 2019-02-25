@@ -7,36 +7,10 @@ from pandas import DataFrame
 
 
 #--------------------Methods-----------------------------
-#A method that inserts columns into a table (for splitting the columns containing string categories)
-# calls for a method that splits the relevant columns and deletes the original columns that was divided
-def insert_col_df(df2):
 
-    df2.insert(1, 'v', 1)
-    df2.insert(5, 'typical', np.nan)
-    df2.insert(6, 'asymptomatic', np.nan)
-    df2.insert(7, 'nonanginal', np.nan)
-    df2.insert(8, 'nontypical', np.nan)
-    # --------------------------------------------
-    df2.insert(19, 'fixed', np.nan)
-    # df2.insert(19, 'NaN', np.nan)
-    df2.insert(20, 'normal', np.nan)
-    df2.insert(21, 'reversable', np.nan)
-    # --------------------------------------------
-    two_option_col('ChestPain', df2)
-    two_option_col('Thal', df2)
-    two_option_col('AHD', df2)
-    # afther spliting the cols del the orginal
-    df2.__delitem__('ChestPain')
-    df2.__delitem__('Thal')
-
-    #df2.to_csv('data.csv', index=False)
-
-#------------------------------------------------------------------
 #A method that checks whether the cell is empty- no information
 def isNaN(val):
     return val != val or val==''
-#---------------------------------------
-
 
 #---------------------------------------------------------
 
@@ -81,7 +55,7 @@ def enter_val_toCol(df, name,feat):
                 if v != ' ?':
                     df[v].at[index[i]] = 0
                     if col_val[i] == ' ?':  # if ther is '?'  in thlist col enter in the split col -1
-                        df[v].at[index[i]] = -1
+                        df[v].at[index[i]] = ' ?'
 
 
 #--------------------------------------------------
@@ -105,7 +79,7 @@ def insert_col(df,name,start_col,feat):
 
     for val in feat:
         if val!=' ?':
-            df.insert(start_col, val,np.nan)
+            df.insert(start_col, val,' ')
             start_col = start_col + 1
     #enter needed val in the  new cols
     enter_val_toCol(df, name, feat)
@@ -150,23 +124,6 @@ def insert_all_col(df,col_list):
 
     return df
 
-
-#------------------------------------------------
-#Accepts columns that have only 2 different values
-#Changing one of the values to 0 and the second to 1
-def two_option_col(colName,val1,val2, df):
-
-
-
-    index = df.index.tolist()
-    col=list(df[colName])
-    indexCol = 0
-    for i in index:
-        if col[indexCol] == val1:
-            df[colName].at[i] = 0
-        elif col[indexCol] == val2:
-            df[colName].at[i] = 1
-        indexCol += 1
 
 
 

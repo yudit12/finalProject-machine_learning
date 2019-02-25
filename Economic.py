@@ -19,9 +19,6 @@ def main():
     # print(col_num)
     #
 
-    # print(df.shape)
-    # csv_org.two_option_col('result',' <=50K',' >50K', df)
-    # csv_org.two_option_col('sex',' Male',' Female', df)
 
     df.to_csv('data.csv', index=False)
 
