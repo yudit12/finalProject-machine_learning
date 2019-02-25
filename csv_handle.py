@@ -22,9 +22,9 @@ def insert_col_df(df2):
     df2.insert(20, 'normal', np.nan)
     df2.insert(21, 'reversable', np.nan)
     # --------------------------------------------
-    split_col_data('ChestPain', df2)
-    split_col_data('Thal', df2)
-    split_col_data('AHD', df2)
+    two_option_col('ChestPain', df2)
+    two_option_col('Thal', df2)
+    two_option_col('AHD', df2)
     # afther spliting the cols del the orginal
     df2.__delitem__('ChestPain')
     df2.__delitem__('Thal')
@@ -41,7 +41,7 @@ def isNaN(val):
 #------------------------------------------------
 #Accepts columns that have only 2 different values
 #Changing one of the values to 0 and the second to 1
-def split_col_data(colName,val1,val2, df):
+def two_option_col(colName,val1,val2, df):
 
 
     index = df.index.tolist()
@@ -53,6 +53,10 @@ def split_col_data(colName,val1,val2, df):
         elif col[indexCol] == val2:
             df[colName].at[i] = 1  # more than 50k
         indexCol += 1
+
+
+
+
 
 
 
