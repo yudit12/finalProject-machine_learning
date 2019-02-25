@@ -38,33 +38,62 @@ def get_col_name(df,col_name):
 #--------------------------------------------------
 # insert on col to df split to the col feathers
 def insert_col(df,name,start_col,feat):
+    # add new cols
+
     for val in feat:
         if val!=' ?':
-            df.insert(start_col, val, 0)
+            df.insert(start_col, val,np.nan)
             start_col = start_col + 1
-    # length = df.shape[0]
+    #enter needed val in the  new cols
+    length = df.shape[0]
     # print(feat)
-    # col_val=list(df['workclass'])
-    # for i in range(length):
-    #     for v in feat:
-    #         print(v)
-    #         if col_val[i]==v:
-    #             if val != ' ?':
-    #                 df[val].at[i]=1
+    col_val=list(df[name])
+    # print(feat)
+    index = df.index.tolist()
+    for i in range(length):
+        for v in feat:
+            if col_val[i]==v:# feat name = val in the col list
+                if v != ' ?':
+                    df[v].at[index[i]]=1
 
 
-#    df.to_csv('data.csv',index=False)
+            else:#  feat name != val in the col list
+                if v != ' ?':
+                    df[v].at[index[i]] = 0
+                    if col_val[i]==' ?': # if ther is '?'  in thlist col enter in the split col -1
+                        df[v].at[index[i]] = -1
 
+
+
+    # df.to_csv('data.csv', index=False)
+
+
+
+
+#-----------------------------------------------------------
+def del_col(df,col_list):
+    for val in col_list:
+        feat = get_col_feat(df, val)
+        if len(feat) > 2:
+            df.__delitem__(val)
+    print(df.shape)
 
 #---------------------------------------------------------
 # get list of col to split and  insert them to the df
 def insert_all_col(df,col_list):
     for val  in col_list:
         feat=get_col_feat(df,val)
-        # index, name = get_col_name(df, val)  # index= num of col in real loc of df
-        index = df.columns.get_loc(val)
-        # print(feat, len(feat))
-        insert_col(df,val, index + 1, feat)
+        if len(feat)>2:
+            # index, name = get_col_name(df, val)  # index= num of col in real loc of df
+            index = df.columns.get_loc(val)
+            # print(feat, len(feat))
+            insert_col(df,val, index + 1, feat)
+    print(df.shape)
+    del_col(df, col_list)
+    df.to_csv('data.csv', index=False)
+
+
+
 
 
 
@@ -77,18 +106,18 @@ def main():
     df = pd.read_csv(path)
     country_name = [' Cuba']
     df=sort_data_by_country(df, country_name)
-    col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'result']
+    col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex','native-country', 'result']
     insert_all_col(df, col_to_split)
     # print(df.shape)
-    col_num = df.columns.get_loc('workclass')
-    print(col_num)
-    print(list(df['workclass']))
+    # col_num = df.columns.get_loc('workclass')
+    # print(col_num)
+    #
 
     csv_org.split_col_data('result',' <=50K',' >50K', df)
     csv_org.split_col_data('sex',' Male',' Female', df)
 
     df.to_csv('data.csv', index=False)
-   # print(df.index.tolist())
+
 
     XMatrix = csv_org.x_matrix(df)
     y = csv_org.y_vector(df)
