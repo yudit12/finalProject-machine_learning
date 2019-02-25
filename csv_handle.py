@@ -64,6 +64,7 @@ def handle_2optionCol(df,name,feat):
     # df.insert(index , name + '1', np.nan)
     col_val = list(df[name])
     index = df.index.tolist()
+    # print(index)
     length = df.shape[0]
     for i in range(length):
         if feat[0] == col_val[i]:

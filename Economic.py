@@ -10,9 +10,12 @@ def main():
     country_name = [' Cuba']
     df=csv_org.sort_data_by_country(df, country_name)
     # print(df.shape)
+    df = df.reset_index(drop=True)
+    # df.to_csv('data.csv', index=False)
+    print(df)
     col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex','native-country', 'result']
     csv_org.insert_all_col(df, col_to_split)
-    csv_org.normalizationAll(df)# normalization data
+    # csv_org.normalizationAll(df)# normalization data
 
     # print(df.shape)
     # col_num = df.columns.get_loc('workclass')
