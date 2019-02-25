@@ -90,7 +90,7 @@ def insert_all_col(df,col_list):
             insert_col(df,val, index + 1, feat)
     print(df.shape)
     del_col(df, col_list)
-    df.to_csv('data.csv', index=False)
+    #df.to_csv('data.csv', index=False)
 
 
 
@@ -114,7 +114,7 @@ def main():
     #
 
     csv_org.split_col_data('result',' <=50K',' >50K', df)
-    csv_org.split_col_data('sex',' Male',' Female', df)
+    #csv_org.split_col_data('sex',' Male',' Female', df)
 
     df.to_csv('data.csv', index=False)
 

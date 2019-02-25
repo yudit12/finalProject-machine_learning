@@ -44,17 +44,21 @@ def isNaN(val):
 def split_col_data(colName,val1,val2, df):
 
 
+
     index = df.index.tolist()
     col=list(df[colName])
+    print("colName ",colName," col ",col)
+    print("all index ", index)
     indexCol = 0
     for i in index:
-        if col[indexCol] == val1:  # Less than 50k or equal
+        if col[indexCol] == val1:
             df[colName].at[i] = 0
         elif col[indexCol] == val2:
-            df[colName].at[i] = 1  # more than 50k
+            df[colName].at[i] = 1
         indexCol += 1
 
-
+    print("col after: ", df[colName])
+    print(df)
 
 #-------------------------------------------------------------------
 #Returns row content from the file (information about one patient)
@@ -70,7 +74,7 @@ def contain_row(row_num,df):
 #---------------------------------------
 #A method that checks whether the cell is empty- no information
 def isNaN(val):
-    return val != val or val==''
+    return val != val or val=='' or val=='?'
 #-------------------------------
 
 
