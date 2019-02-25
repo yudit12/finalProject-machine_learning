@@ -143,7 +143,7 @@ def contain_row(row_num,df):
 #---------------------------------------
 #A method that checks whether the cell is empty- no information
 def isNaN(val):
-    return val != val or val=='' or val=='?'
+    return val != val or val=='' or val==' ?'
 #-------------------------------
 
 
@@ -181,13 +181,15 @@ def replaceNaN(file,colName,avg):
     #=file.iloc[0,col_num]
     #print(col_num," ",col_name," ")
     col=list(file[colName]) # create list from row
-    rowNum=0
+    #rowNum=0
     #colName= recognizeColByNum(file,col_num)
+    index = file.index.tolist()
 
-    for i in col:
-        if isNaN(i):
+    rowNum=0
+    for val in col:
+        if isNaN(val):
             #col = list(file[col_name])
-            file[colName].at[rowNum] = avg
+            file[colName].at[index[rowNum]] = avg
 
         rowNum+=1
 
@@ -196,21 +198,20 @@ def replaceNaN(file,colName,avg):
 #A method that normalizes specific col in the file
 def normalization(file,colName):
 
-    print(colName)
 
 
     col = list(file[colName])
-    print(col)
     #col = contain_col(col_num, file)  # create list from row
     average,line_count,flagNaN=averageCol(col)
     if flagNaN==1:
         replaceNaN(file,colName, average)
         col = list(file[colName])
         #col = contain_col(col_num, file)  # create list from row
-        average, line_count, flagNaN = averageCol(col)
+        #average, line_count, flagNaN = averageCol(col)
     standard_deviation=0
     index=0
     normalization_col=col
+
 
     for i in col:
         tmp =i-average
