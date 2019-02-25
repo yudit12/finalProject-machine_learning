@@ -3,7 +3,7 @@ import csv
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-import ConvertStrToInt as strHandle
+
 
 
 #--------------------Methods-----------------------------
@@ -22,14 +22,56 @@ def insert_col_df(df2):
     df2.insert(20, 'normal', np.nan)
     df2.insert(21, 'reversable', np.nan)
     # --------------------------------------------
-    strHandle.split_col_data('ChestPain', df2)
-    strHandle.split_col_data('Thal', df2)
-    strHandle.split_col_data('AHD', df2)
+    split_col_data('ChestPain', df2)
+    split_col_data('Thal', df2)
+    split_col_data('AHD', df2)
     # afther spliting the cols del the orginal
     df2.__delitem__('ChestPain')
     df2.__delitem__('Thal')
 
     #df2.to_csv('data.csv', index=False)
+
+#------------------------------------------------------------------
+#A method that checks whether the cell is empty- no information
+def isNaN(val):
+    return val != val or val==''
+#---------------------------------------
+
+#Returns col content
+def contain_col(col_num,df):
+    colList = []
+    for j in range(df.shape[0]):# run on the num of rows
+        #col+=str(df.iloc[j][col_num])+" \n"
+        colList.append(df.iloc[j][col_num])
+    return colList
+#------------------------------------------------
+
+#A method that splits the column with string categories  the colums as number of categories
+# it has, each new column receives the value of the category,
+# the cells in the column are marked with one where the category is the same in the original column and the rest  is zero
+def split_col_data(col_name, df):
+    length = df.shape[0]
+    col_num = df.columns.get_loc(col_name)
+    index = df.index.tolist()
+    col = contain_col(col_num, df)
+
+    if col_name == 'result':
+        indexCol = 0
+        for i in index:
+            if col[indexCol] == ' <=50K':  # Less than 50k or equal
+                df[col_name].at[i] = 0
+            elif col[indexCol] == ' >50K':
+                df[col_name].at[i] = 1  # more than 50k
+            indexCol += 1
+    if col_name == 'sex':
+        indexCol = 0
+        for i in index:
+            if col[indexCol] == ' Male':  # Less than 50k or equal
+                df[col_name].at[i] = 0
+            elif col[indexCol] == ' Female':
+                df[col_name].at[i] = 1  # more than 50k
+            indexCol += 1
+
 
 #-------------------------------------------------------------------
 #Returns row content from the file (information about one patient)
@@ -79,13 +121,13 @@ def recognizeColByNum(file,col_num):
 #-------------------------------
 #method that replaces an average nan value of the same column
 def replaceNaN(file,col_num,avg):
-    col = strHandle.contain_col(col_num, file)  # create list from row
+    col = contain_col(col_num, file)  # create list from row
     rowNum=0
     colName= recognizeColByNum(file,col_num)
 
     for i in col:
         if isNaN(i):
-            col = strHandle.contain_col(col_num, file)
+            col = contain_col(col_num, file)
             file[colName].at[rowNum] = avg
 
         rowNum+=1
@@ -94,11 +136,11 @@ def replaceNaN(file,col_num,avg):
 
 #A method that normalizes specific col in the file
 def normalization(file, col_num):
-    col = strHandle.contain_col(col_num, file)  # create list from row
+    col = contain_col(col_num, file)  # create list from row
     average,line_count,flagNaN=averageCol(col)
     if flagNaN==1:
         replaceNaN(file,col_num, average)
-        col = strHandle.contain_col(col_num, file)  # create list from row
+        col = contain_col(col_num, file)  # create list from row
         average, line_count, flagNaN = averageCol(col)
     standard_deviation=0
     index=0
@@ -128,7 +170,7 @@ def normalization(file, col_num):
 def normalizationAll(file):
     colNum=file.shape[1]
     for colIndex in range(2,colNum-1):  # run on the num of cols WITHOUT V_ONE
-        colLine = strHandle.contain_col(colIndex, file)
+        colLine = contain_col(colIndex, file)
         normalization(file, colIndex)
 
 #---------------------------------
