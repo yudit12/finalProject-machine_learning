@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import csv_handle as csv_org
 import lgReg_handle as lgr
-import ConvertStrToInt as strHandle
 
 #---------------------------------------------------------
 #
@@ -113,7 +112,7 @@ def main():
     # print(col_num)
     #
 
-    strHandle.split_col_data('result', df)
+    csv_org.split_col_data('result', df)
 
 
     # print(df.index.tolist())
