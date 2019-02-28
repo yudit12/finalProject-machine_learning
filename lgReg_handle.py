@@ -63,42 +63,40 @@ def indexMinElement(vec):  # return the index of min element in vector
 
 # -------------------------------------
 def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_test_matrix, k_parameter=10):
-
-
-    C_param_range = [ np.inf,10000,1000, 100, 10, 1, 0.5,(1/3),0.1]
+    # C_param_range = [ np.inf, 10, 1, 0.5,(1/3),0.1]
+    C_param_range = [1, 0.5, (1 / 3), 0.1]
     testErrOneModel = [0.0] * k_parameter
     testErrAllModels = []
 
     for c in C_param_range:
         for i in range(k_parameter):
-
             logreg = LogisticRegression(C=c, solver='lbfgs', penalty='l2').fit(X_train_matrix[i], y_train_matrix[i])
             errI = logreg.predict(X_test_matrix[i])
             testErrOneModel[i] = float(sum(errI != y_test_matrix[i])) / len(y_test_matrix[i])
-        avgErr=np.mean(testErrOneModel)
-        print('The average error value of lambda=',1/c,'is',avgErr)
+        avgErr = np.mean(testErrOneModel)
+        print('The average error value of lambda=', 1 / c, 'is', avgErr)
         testErrAllModels.append(avgErr)
 
     indexBetterModel = indexMinElement(testErrAllModels)
 
     optimalLambda = C_param_range[indexBetterModel]
     print('')
-    print('The optimal lambda', 1/optimalLambda)
+    print('The optimal lambda', 1 / optimalLambda)
     print('The average error of the model with this lambda is:', testErrAllModels[indexBetterModel])
-    print('The average error of the model with lambda=0 is:', testErrAllModels[0])
+    #  print('The average error of the model with lambda=0 is:', testErrAllModels[0])
 
-    return(C_param_range,testErrAllModels,optimalLambda)
+    return (C_param_range, testErrAllModels, optimalLambda)
 
 
 # ------------------------------------------------------------------------
 def draw_graph(C_param_range, testErrAllModels):
-    C_param_range=C_param_range[1:]
+    C_param_range = C_param_range[1:]
     c_len = len(C_param_range)
-    lambdaArray=[]
+    lambdaArray = []
     for i in range(c_len):
-        lambdaArray.append(1/C_param_range[i])
+        lambdaArray.append(1 / C_param_range[i])
 
-    testErrAllModels=testErrAllModels[1:]
+    testErrAllModels = testErrAllModels[1:]
 
     plt.title(" error for given lambdas")
     plt.plot(lambdaArray, testErrAllModels, label='test error')
@@ -108,22 +106,27 @@ def draw_graph(C_param_range, testErrAllModels):
     plt.legend()
     plt.show()
 
-def raph_learning_groups(XMatrix,y,optimalLambda):
-    learningGroups=np.array(range(10,210,10))
+
+def graph_learning_groups(XMatrix, y, optimalLambda, numAllRow):
+    learNum = int(numAllRow * 0.7)
+    learNum = int(learNum / 10) * 10 + 1
+    print("learNum", learNum)
+    print("rang ", list(range(10, learNum, 10)))
+    learningGroups = np.array(range(10, learNum, 10))
     errAvg = []
-    errAvgTrain=[]
-    xTestMatrix=XMatrix[201:]
-    yTestVec = y[201:]
+    errAvgTrain = []
+    xTestMatrix = XMatrix[learNum:]
+    yTestVec = y[learNum:]
+    print("len test", len(yTestVec))
     for rowTrains in learningGroups:
-        xTrainMatrix=XMatrix[0:rowTrains]
-        yTraintVec=y[0:rowTrains]
+        xTrainMatrix = XMatrix[0:rowTrains]
+        yTraintVec = y[0:rowTrains]
         logreg = LogisticRegression(C=optimalLambda, solver='lbfgs', penalty='l2').fit(xTrainMatrix, yTraintVec)
         errTest = logreg.predict(xTestMatrix)
         errAvg.append(float(sum(errTest != yTestVec)) / len(yTestVec))
 
         errTrain = logreg.predict(xTrainMatrix)
         errAvgTrain.append(float(sum(errTrain != yTraintVec)) / len(yTraintVec))
-
 
     plt.plot(learningGroups, errAvg, label='test error')
     plt.plot(learningGroups, errAvgTrain, label='train error')
