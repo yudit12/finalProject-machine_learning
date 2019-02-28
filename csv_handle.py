@@ -95,7 +95,7 @@ def insert_col(df,name,start_col,feat):
 def del_col(df,col_list):
     for val in col_list:
         feat = get_col_feat(df, val)
-        if len(feat) > 2:
+        if val!= 'native-country' and len(feat) > 2:
             df.__delitem__(val)
     df.__delitem__('native-country')
 

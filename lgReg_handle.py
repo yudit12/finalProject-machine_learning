@@ -67,7 +67,7 @@ def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_tes
 
 
     #C_param_range = [ np.inf, 10, 1, 0.5,(1/3),0.1]
-    C_param_range = [ 10, 1, 0.5,(1/3),0.1]
+    C_param_range = [ 1, 0.5,(1/3),0.1]
     testErrOneModel = [0.0] * k_parameter
     testErrAllModels = []
 
