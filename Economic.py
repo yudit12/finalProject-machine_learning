@@ -2,13 +2,36 @@ import numpy as np
 import pandas as pd
 import csv_handle as csv_org
 import lgReg_handle as lgr
-
+from sklearn import tree
+from sklearn.datasets import load_iris
+import graphviz
+import decision_tree_handle as dtree
 
 def main():
     path = 'economic_data.csv'
     df = pd.read_csv(path)
 
+    '''  X = [[0, 0], [1, 1]]
+    Y = [0, 1]
+    clf = tree.DecisionTreeClassifier()
+    clf = clf.fit(X, Y)
 
+    clf.predict([[2., 2.]])
+    #clf.predict_proba([[2., 2.]])
+    print(clf)
+    #--------------------
+
+    iris = load_iris()
+    clf_iris = tree.DecisionTreeClassifier()
+    clf_iris = clf_iris.fit(iris.data, iris.target)
+    print(clf_iris)
+    dot_data = tree.export_graphviz(clf, out_file=None)
+    graph = graphviz.Source(dot_data)
+    graph.render("iris")
+    '''
+
+    dtree.build_tree();
+    '''
     #fillter_feat = [' Cuba',' China',' Germany']
     # fillter_col='native-country'
     # fillter_feat = [' Germany']
@@ -42,7 +65,7 @@ def main():
     print("len ",len(y))
     lgr.draw_graph(C_param_range, testErrAllModels)
     lgr.graph_learning_groups(XMatrix,y,optimalLambda,len(y))
-
+    '''
 
 if __name__ == "__main__":
     main()
