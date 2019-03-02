@@ -19,6 +19,7 @@ export_graphviz(dtree, out_file=dot_data,
                 special_characters=True)
 graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
 Image(graph.create_png())
+print("4")
 '''
 
 
