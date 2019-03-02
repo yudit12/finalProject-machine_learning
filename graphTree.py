@@ -81,20 +81,6 @@ for country_name in countries:#all countries without USA and '?'
 
         df_n.to_csv('dt3.csv', index=False)
 
-        '''
-        
-        
-        # Data Collection
-        X = [ [180, 15,0],
-              [177, 42,0],
-              [136, 35,1],
-              [174, 65,0],
-              [141, 28,1]]
-        
-        Y = ['man', 'woman', 'woman', 'man', 'woman']
-        
-        data_feature_names = [ 'height', 'hair length', 'voice pitch' ]
-        '''
         # Training
         clf = tree.DecisionTreeClassifier()
         clf = clf.fit(XMatrix,y)
