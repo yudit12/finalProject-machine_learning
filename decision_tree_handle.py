@@ -1,17 +1,37 @@
+"""
+=========================================
+Understanding the decision tree structure
+=========================================
+
+The decision tree structure can be analysed to gain further insight on the
+relation between the features and the target to predict. In this example, we
+show how to retrieve:
+
+- the binary tree structure;
+- the depth of each node and whether or not it's a leaf;
+- the nodes that were reached by a sample using the ``decision_path`` method;
+- the leaf that was reached by a sample using the apply method;
+- the rules that were used to predict a sample;
+- the decision path shared by a group of samples.
+
+"""
+
+
 import numpy as np
 
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris
 from sklearn.tree import DecisionTreeClassifier
 
-def build_tree():
-    iris = load_iris()
-    X = iris.data
-    y = iris.target
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+def build_tree(X, y):
+    # iris = load_iris()
+    # X = iris.data
+    # y = iris.target
+    #X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
     estimator = DecisionTreeClassifier(max_leaf_nodes=3, random_state=0)
-    estimator.fit(X_train, y_train)
+    #estimator.fit(X_train, y_train)
+    estimator.fit(X, y)
 
     # The decision estimator has an attribute called tree_  which stores the entire
     # tree structure and allows access to low level attributes. The binary tree
@@ -75,7 +95,7 @@ def build_tree():
     # indicator matrix at the position (i, j) indicates that the sample i goes
     # through the node j.
 
-    node_indicator = estimator.decision_path(X_test)
+    '''    node_indicator = estimator.decision_path(X_test)
 
     # Similarly, we can also have the leaves ids reached by each sample.
 
@@ -115,4 +135,4 @@ def build_tree():
 
     print("\nThe following samples %s share the node %s in the tree"
           % (sample_ids, common_node_id))
-    print("It is %s %% of all nodes." % (100 * len(common_node_id) / n_nodes,))
+    print("It is %s %% of all nodes." % (100 * len(common_node_id) / n_nodes,))'''
