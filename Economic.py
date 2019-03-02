@@ -6,6 +6,7 @@ from sklearn import tree
 from sklearn.datasets import load_iris
 import graphviz
 import decision_tree_handle as dtree
+import tree2 as t2
 
 def main():
     path = 'economic_data.csv'
@@ -20,18 +21,19 @@ def main():
     #clf.predict_proba([[2., 2.]])
     print(clf)
     #--------------------
+    
 
     iris = load_iris()
+    print(iris)
     clf_iris = tree.DecisionTreeClassifier()
     clf_iris = clf_iris.fit(iris.data, iris.target)
-    print(clf_iris)
-    dot_data = tree.export_graphviz(clf, out_file=None)
+   # print(clf_iris)
+    dot_data = tree.export_graphviz(clf_iris, out_file=None)
     graph = graphviz.Source(dot_data)
-    graph.render("iris")
+#    graph.render("iris")
     '''
 
-    dtree.build_tree();
-    '''
+
     #fillter_feat = [' Cuba',' China',' Germany']
     # fillter_col='native-country'
     # fillter_feat = [' Germany']
@@ -42,16 +44,28 @@ def main():
     df=csv_org.filter_data_by_feature(df, fillter_col,fillter_feat)
 
     # print(df.shape)
-    df = df.reset_index(drop=True)
-    df.to_csv('data.csv', index=False)
+   # df = df.reset_index(drop=True)
+
     #print(df)
 
 
     col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex','native-country', 'result']
     csv_org.insert_all_col(df, col_to_split)
-    csv_org.normalizationAll(df)# normalization data
-    df.to_csv('data.csv', index=False)
+    #print(df)
 
+    csv_org.replaceAllNaN(df)# normalization data
+    df.to_csv('data.csv', index=False)
+    #df.to_csv('data.csv', index=False)
+    #index = df.index.tolist()
+    #print(index)
+    XMatrix = csv_org.x_matrix(df)
+    y = csv_org.y_vector(df)
+
+    dtree.build_tree(XMatrix,y);
+    print("tree2")
+    t2.mainTree(XMatrix,y)
+
+    '''
 
     XMatrix = csv_org.x_matrix(df)
     y = csv_org.y_vector(df)
