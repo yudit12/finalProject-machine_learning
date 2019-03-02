@@ -8,9 +8,6 @@ from pandas import DataFrame
 
 #--------------------Methods-----------------------------
 
-#A method that checks whether the cell is empty- no information
-def isNaN(val):
-    return val != val or val==''
 
 #---------------------------------------------------------
 
@@ -95,7 +92,7 @@ def insert_col(df,name,start_col,feat):
 def del_col(df,col_list):
     for val in col_list:
         feat = get_col_feat(df, val)
-        if val!= 'native-country' and len(feat) > 2:
+        if len(feat) > 2:
             df.__delitem__(val)
     df.__delitem__('native-country')
 
@@ -126,9 +123,10 @@ def insert_all_col(df,col_list):
 #Returns row content from the file (information about one patient)
 def contain_row(row_num,df):
     rowList = []
+
     for j in range(df.shape[1]):# run on the num of cols
-        #if j==0:
-        #    continue
+       # if j==0:
+       #     continue
         rowList.append(df.iloc[row_num][j])
 
     return rowList
@@ -187,7 +185,12 @@ def replaceNaN(file,colName,avg):
         rowNum+=1
 
 #-------------------------------
-def findAvgAndReplaceNaN(file,colName):
+
+#A method that normalizes specific col in the file
+def normalization(file,colName):
+
+
+
     col = list(file[colName])
     #col = contain_col(col_num, file)  # create list from row
     average,line_count,flagNaN=averageCol(col)
@@ -196,13 +199,6 @@ def findAvgAndReplaceNaN(file,colName):
         col = list(file[colName])
         #col = contain_col(col_num, file)  # create list from row
         #average, line_count, flagNaN = averageCol(col)
-    return col,average,line_count
-
-#A method that normalizes specific col in the file
-def normalization(file,colName):
-
-    col,average,line_count=findAvgAndReplaceNaN(file,colName)
-
     standard_deviation=0
     index=0
     normalization_col=col
@@ -236,12 +232,6 @@ def normalizationAll(file):
         labelList=list(file);
         normalization(file,labelList[colIndex])
     #normalization(file,"Handlers-cleaners")
-#---------------------------------
-def replaceAllNaN(file):
-    colNum=file.shape[1]
-    for colIndex in range(0,colNum-1):  # run on the num of cols WITHOUT V_ONE
-        labelList=list(file);
-        findAvgAndReplaceNaN(file,labelList[colIndex])
 
 #---------------------------------
 # method that return only x matrix from the ds (data frame) file
