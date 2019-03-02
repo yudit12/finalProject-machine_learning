@@ -1,8 +1,4 @@
-# Run this program on your local python
-# interpreter, provided you have installed
-# the required libraries.
 
-# Importing the required packages
 import numpy as np
 import pandas as pd
 from sklearn.metrics import confusion_matrix
@@ -10,29 +6,35 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
+from sklearn.preprocessing import LabelEncoder
+
+
+def filter_data_by_feature(df,colName,feat_name):
+    # from all data get data only on spesifc country
+
+    # df.sort_values(by=col_name, ascending=False)
+    by_country = df.loc[df[colName].isin(feat_name)]
+    return by_country
 
 
 # Function importing Dataset
 def importdata():
-    balance_data = pd.read_csv(
-        'https://archive.ics.uci.edu/ml/machine-learning-' +
-        'databases/balance-scale/balance-scale.data',
-        sep=',', header=None)
-
+    path = 'economic_data.csv'
+    balance_data = pd.read_csv(path)
     # Printing the dataswet shape
     print("Dataset Lenght: ", len(balance_data))
     print("Dataset Shape: ", balance_data.shape)
-
-    # Printing the dataset obseravtions
-    print("Dataset: ", balance_data.head())
+    # print(balance_data)
     return balance_data
 
 
 # Function to split the dataset
 def splitdataset(balance_data):
     # Seperating the target variable
-    X = balance_data.values[:, 1:5]
-    Y = balance_data.values[:, 0]
+    X = balance_data.values[:, 0:13]
+    print(X)
+    Y = balance_data.values[:, 13]
+    # print(Y)
 
     # Spliting the dataset into train and test
     X_train, X_test, y_train, y_test = train_test_split(
@@ -52,58 +54,70 @@ def train_using_gini(X_train, X_test, y_train):
     return clf_gini
 
 
-# Function to perform training with entropy.
-def tarin_using_entropy(X_train, X_test, y_train):
-    # Decision tree with entropy
-    clf_entropy = DecisionTreeClassifier(
-        criterion="entropy", random_state=100,
-        max_depth=3, min_samples_leaf=5)
-
-    # Performing training
-    clf_entropy.fit(X_train, y_train)
-    return clf_entropy
-
-
 # Function to make predictions
 def prediction(X_test, clf_object):
     # Predicton on test with giniIndex
     y_pred = clf_object.predict(X_test)
     print("Predicted values:")
-    print(y_pred)
+    print("y_pred:",y_pred)
+    print(len(y_pred))
     return y_pred
 
 
 # Function to calculate accuracy
 def cal_accuracy(y_test, y_pred):
-    print("Confusion Matrix: ",
-          confusion_matrix(y_test, y_pred))
-
+    #classification, the count of true negatives is Matrix[0,0] , false negatives is Matrix[1,0] , true positives is Matrix[1,1]  and false positives is Matrix[0,1] .
+    matrix=confusion_matrix( y_test, y_pred)
+    print("Confusion Matrix:",matrix)
+    TN=matrix[0,0]
+    FN=matrix[1,0]
+    FP = matrix[0, 1]
+    TP = matrix[1, 1]
+#computes subset accuracy: the set of labels predicted for a sample must exactly match the corresponding set of labels in y_true.
     print("Accuracy : ",
           accuracy_score(y_test, y_pred) * 100)
 
-    print("Report : ",
+
+    """
+    The reported averages include:
+    precision    recall  f1-score   support
+    micro average -averaging the total true positives, false negatives and false positives
+    macro average-averaging the unweighted mean per label,
+    weighted average -averaging the support-weighted mean per label
+    and sample average -only for multilabel classification- NOT IN  OUR CASE
+    """
+    print("Report :",
           classification_report(y_test, y_pred))
 
 
-# Driver code
 def main():
-    # Building Phase
     data = importdata()
-    X, Y, X_train, X_test, y_train, y_test = splitdataset(data)
+    fillter_col = 'native-country'
+    fillter_feat = [' Cuba']
+
+    data = filter_data_by_feature(data, fillter_col, fillter_feat)
+    col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'result']
+    for col_name in col_to_split:  # run on the num of cols
+        col = LabelEncoder()
+        data[col_name + '_n'] = col.fit_transform(data[col_name])
+        data[col_name + '_n'] = col.fit_transform(data[col_name])
+    data1 = data.drop(col_to_split, axis='columns')
+    data1 = data1.drop('native-country', axis='columns')
+    print(data1)
+    data1.to_csv('1.csv', index=False)
+
+    X, Y, X_train, X_test, y_train, y_test = splitdataset(data1)
     clf_gini = train_using_gini(X_train, X_test, y_train)
-    # clf_entropy = tarin_using_entropy(X_train, X_test, y_train)
 
-    # Operational Phase
-    # print("Results Using Gini Index:")
-
-    # Prediction using gini
+    print("Results Using Gini Index:")
+    print(len(X_test))
     y_pred_gini = prediction(X_test, clf_gini)
-    # cal_accuracy(y_test, y_pred_gini)
+    print("y_test:",y_test)
+    cal_accuracy(y_test, y_pred_gini)
 
-    # print("Results Using Entropy:")
-    # Prediction using entropy
-    # y_pred_entropy = prediction(X_test, clf_entropy)
-    # cal_accuracy(y_test, y_pred_entropy)
+
+
+
 
 
 # Calling main function
