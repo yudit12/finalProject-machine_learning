@@ -121,14 +121,12 @@ def draw_graph(C_param_range, testErrAllModels):
 def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow):
     learNum=int(numAllRow*0.7)
     learNum=int(learNum/10)*10+1
-    print("learNum",learNum)
-    print("rang ",list(range(10,learNum,10)))
+
     learningGroups=np.array(range(10,learNum,10))
     errAvg = []
     errAvgTrain=[]
     xTestMatrix=XMatrix[learNum:]
     yTestVec = y[learNum:]
-    print("len test",len(yTestVec))
 
     for rowTrains in learningGroups:
         xTrainMatrix = XMatrix[0:rowTrains]

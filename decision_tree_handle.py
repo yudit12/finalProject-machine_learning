@@ -22,7 +22,6 @@ def runAllCountries(file,col_to_split):#fillter_col = 'native-country'
     if('native-country' in col_to_split):
         col_to_split.remove('native-country');
 
-    print("len",len(countries))
 
     for country_name in countries:#all countries without USA and '?'
         if country_name==' United-States' or country_name==' ?':

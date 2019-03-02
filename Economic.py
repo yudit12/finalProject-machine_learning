@@ -43,7 +43,6 @@ def main():
     C_param_range, testErrAllModels,optimalLambda=\
         lgr.k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix,y_test_matrix, k_parameter=10)
 
-    print("len ",len(y))
     lgr.draw_graph(C_param_range, testErrAllModels)
     lgr.graph_learning_groups(XMatrix,y,optimalLambda,len(y))
 
