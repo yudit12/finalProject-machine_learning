@@ -10,8 +10,11 @@ import os
 
 
 def changePath():
-
     path = 'countries_tree_gini'
+    os.path.dirname(path)
+    if not os.path.exists(path):
+        os.makedirs(path)
+
     os.chdir(path)
 #---------------------------------------
 def runAllCountries(file,col_to_split):#fillter_col = 'native-country'
