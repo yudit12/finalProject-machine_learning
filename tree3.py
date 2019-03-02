@@ -13,7 +13,7 @@ df = pd.read_csv('economic_data.csv')
 #df.head()
 
 fillter_col = 'native-country'
-fillter_feat = [' Greece']
+fillter_feat = [' Cuba']
 df=csv_org.filter_data_by_feature(df, fillter_col,fillter_feat)
 
 
