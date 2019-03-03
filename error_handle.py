@@ -9,6 +9,7 @@ from sklearn.preprocessing import LabelEncoder
 import numpy as np
 import csv_handle as csv_org
 
+
 # Function to make predictions
 def prediction(X_test, clf_object,y_test):
     # Predicton on test with giniIndex
@@ -19,8 +20,17 @@ def prediction(X_test, clf_object,y_test):
     return y_pred
 
 
+def understandable_method(y_test, y_pred):
+    target_names = ['class 0', 'class 1']
+    y_test, matrix, accuracy = cal_accuracy(y_test, y_pred)
+    print("Report :",
+          classification_report(y_test, y_pred, target_names=target_names))
+
+def ourClass(y_test, y_pred,x_test):
+    y_test, matrix, accuracy= cal_accuracy(y_test, y_pred)
+    my_error_calc(matrix, x_test, y_test)
 # Function to calculate accuracy
-def cal_accuracy(y_test, y_pred,x_test):
+def cal_accuracy(y_test, y_pred):
 
     y_test = np.asarray(y_test)
 
@@ -33,7 +43,7 @@ def cal_accuracy(y_test, y_pred,x_test):
     accuracy= accuracy_score(y_test, y_pred) * 100
     print("Accuracy : ",accuracy)
     print("error :",100-accuracy)
-    my_error_calc(matrix, x_test,y_test)
+    #my_error_calc(matrix, x_test,y_test)
 
 
 
@@ -45,10 +55,12 @@ def cal_accuracy(y_test, y_pred,x_test):
     weighted average -averaging the support-weighted mean per label
     and sample average -only for multilabel classification- NOT IN  OUR CASE
     """
-    print("Report :",
-          classification_report(y_test, y_pred,target_names="1"))
 
+    # target_names = ['class 0', 'class 1']
+    # print("Report :",
+    #       classification_report(y_test, y_pred,target_names=target_names))
 
+    return y_test,matrix,accuracy
 #-------------------------------------
 
 # my checkss
@@ -64,8 +76,8 @@ def my_error_calc(matrix,x_test,y_test):
  accr = accuracy(right, all_test)*100
  print("accr:", accr)
 
-
- print("error :", 100 - accr)
+ if accr!=np.nan:
+    print("error :", 100 - accr)
  rec = recall(TP, FN)
  print("recall :", rec)
  pre = precision(TP, FP)
@@ -79,16 +91,22 @@ def my_error_calc(matrix,x_test,y_test):
 
 #--------------------------------------
 def accuracy(right,all_test):
+    if all_test==0:
+        return np.nan
     a=right/all_test
     return a
 
 #-----------------------------------
-def error(accuracy):
-    err=1-accuracy
-    return err
+# def error(accuracy):
+#     if accuracy==np.nan:
+#         return np.nan
+#     err=1-accuracy
+#     return err
 
 #----------------------------------
 def recall(TP,FN):
+    if TP+FN==0:
+        return np.nan
     rec=TP/(TP+FN)
     return rec
 
@@ -101,6 +119,8 @@ def precision(TP,FP):
 
 #----------------------------------
 def F_score(recall,precision):
+    if recall == np.nan or precision==np.nan:# Prevents zero division
+        return np.nan
     if recall == 0 or precision==0:# Prevents zero division
         return np.nan
     rec =1/recall
@@ -113,12 +133,16 @@ def F_score(recall,precision):
 #--------------------------------
 # true positive rate-recall
 def TPR(TP,FN):
+    if TP+FN==0:
+        return np.nan
     tpr=TP/(TP+FN)
     return tpr
 
 #--------------------------------
 ## false positive rate
 def FPR(FP,TN):
+    if FP+TN==0:
+        return np.nan
     fpr=FP/(FP+TN)
     return fpr
 

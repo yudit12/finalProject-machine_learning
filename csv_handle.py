@@ -80,8 +80,10 @@ def handle_2optionCol(df,name,feat):
     index = df.index.tolist()
     # print(index)
     length = df.shape[0]
+    #print('f0',feat[0])
     for i in range(length):
         if feat[0] == col_val[i]:
+            #print('y')
             df[name ].at[index[i]] = 1
         else:
             df[name ].at[index[i]] = 0
@@ -119,6 +121,7 @@ def del_col(df,col_list):
 def insert_all_col(df,col_list):
     for val  in col_list:
         feat=get_col_feat(df,val)
+        #print('ff',feat)
         if len(feat)>2:
             # index, name = get_col_name(df, val)  # index= num of col in real loc of df
             index = df.columns.get_loc(val)
