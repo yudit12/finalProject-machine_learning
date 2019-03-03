@@ -3,13 +3,14 @@ from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
 import numpy as np
 import error_handle as error
+from sklearn.model_selection import train_test_split
 
 
 def divDataByKFold(XMatrix, y, k_parameter):  # div data to test and train by k fold
 
     kf = KFold(n_splits=k_parameter)  # Define the split - into 10 folds
     kf.get_n_splits(XMatrix)  # returns the number of splitting iterations in the cross-validator
-
+    print('kf',kf.split(XMatrix))
     X_train_matrix = []
     X_test_matrix = []
     y_train_matrix = []
@@ -84,7 +85,7 @@ def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_tes
             errI = logreg.predict(X_test_matrix[i])
 
             testErrOneModel[i] = float(sum(errI != y_test_matrix[i])) / len(y_test_matrix[i])
-            error.calc_error(X_test_matrix[i], logreg, y_test_matrix[i])
+            # error.calc_error(X_test_matrix[i], logreg, y_test_matrix[i])
         avgErr = np.mean(testErrOneModel)
         print('The average error value of lambda=', 1 / c, 'is', avgErr)
         testErrAllModels.append(avgErr)
@@ -150,3 +151,10 @@ def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow):
     plt.show()
 
 
+def errorOfmodelOptimalLmbda(optimalLambda,XMatrix, y,country_name):
+    X_train, X_test, y_train, y_test = train_test_split(XMatrix, y, test_size=0.3, random_state=100)
+    #print('X_test logistic',X_test)
+    logreg = LogisticRegression(C=optimalLambda, solver='lbfgs', penalty='l2')
+    logreg.fit(X_train, y_train)
+    accr, rec, pre, f_sc, tpr, fpr=error.calc_error(X_test, logreg, y_test,flag=1)
+    error.printResult(country_name, ' LogisticRegression ', accr, rec, pre, f_sc, tpr, fpr)

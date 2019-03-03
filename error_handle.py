@@ -9,38 +9,52 @@ from sklearn.preprocessing import LabelEncoder
 import numpy as np
 import csv_handle as csv_org
 
-def calc_error(X_test, model, y_test):
+def calc_error(X_test, model, y_test,flag):
+    #flag check if the method that call this function' is a mathod for comparing models
     y_pred = prediction(X_test, model, y_test)
     y_test, matrix, accuracy = cal_accuracy(y_test, y_pred)
     if matrix.shape == (1, 1):
         return -1;
-    if matrix[0][1] == 0 and matrix[1][1] == 0:
-        my_error_calc(matrix, X_test, y_test)
-    elif matrix[0][0] == 0 and matrix[1][0] == 0:
-        my_error_calc(matrix, X_test, y_test)
+    if (matrix[0][1] == 0 and matrix[1][1] == 0) or flag==1:
+        accr, rec, pre, f_sc, tpr, fpr=my_error_calc(matrix, X_test,flag)
+        return accr, rec, pre, f_sc, tpr, fpr
+    elif (matrix[0][0] == 0 and matrix[1][0] == 0) or flag==1:
+        accr, rec, pre, f_sc, tpr, fpr=my_error_calc(matrix, X_test,flag)
+        return accr, rec, pre, f_sc, tpr, fpr
     else:
         understandable_method(y_test, y_pred)
+
+def printResult(country_name,model_name,accr, rec, pre, f_sc, tpr, fpr):
+    rec*=100
+    pre*=100
+    f_sc*=100
+    tpr*=100
+    fpr*=100
+    print('--------------------------------------')
+    print('Results of',model_name,'about the country',country_name[0])
+    print('accuracy',accr,'\nrecall' ,rec,'\nprecision', pre, '\nF_score',f_sc,'\nTPR', tpr,'\nFPR', fpr)
 
 
 # Function to make predictions
 def prediction(X_test, clf_object,y_test):
     # Predicton on test with giniIndex
     y_pred = clf_object.predict(X_test)
-    print("Predicted values:")
-    print("y_pred:",y_pred,len(y_pred))
-    print("y_test:", y_test, len(y_test))
+    # print("Predicted values:")
+    # print("y_pred:",y_pred,len(y_pred))
+    # print("y_test:", y_test, len(y_test))
     return y_pred
 
 
 def understandable_method(y_test, y_pred):
     target_names = ['class 0', 'class 1']
     y_test, matrix, accuracy = cal_accuracy(y_test, y_pred)
-    print("Report :",
-          classification_report(y_test, y_pred, target_names=target_names))
+    report=classification_report(y_test, y_pred, target_names=target_names)
+    print("Report :",report)
 
-def ourClass(y_test, y_pred,x_test):
-    y_test, matrix, accuracy= cal_accuracy(y_test, y_pred)
-    my_error_calc(matrix, x_test, y_test)
+
+# def ourClass(y_test, y_pred,x_test):
+#     y_test, matrix, accuracy= cal_accuracy(y_test, y_pred)
+#     my_error_calc(matrix, x_test)
 # Function to calculate accuracy
 def cal_accuracy(y_test, y_pred):
 
@@ -49,13 +63,13 @@ def cal_accuracy(y_test, y_pred):
     #classification, the count of true negatives is Matrix[0,0] , false negatives is Matrix[1,0] , true positives is Matrix[1,1]  and false positives is Matrix[0,1] .
 
     matrix=confusion_matrix( y_test, y_pred)
-    print("Confusion Matrix:",matrix)
+    # print("Confusion Matrix:",matrix)
 
 #computes subset accuracy: the set of labels predicted for a sample must exactly match the corresponding set of labels in y_true.
     accuracy= accuracy_score(y_test, y_pred) * 100
-    print("Accuracy : ",accuracy)
-    print("error :",100-accuracy)
-    #my_error_calc(matrix, x_test,y_test)
+    # print("Accuracy : ",accuracy)
+    # print("error :",100-accuracy)
+    #my_error_calc(matrix, x_test)
 
 
 
@@ -78,31 +92,35 @@ def cal_accuracy(y_test, y_pred):
 #-------------------------------------
 
 # my checkss
-def my_error_calc(matrix,x_test,y_test):
- TN = matrix[0, 0]
- FN = matrix[1, 0]
- FP = matrix[0, 1]
- TP = matrix[1, 1]
- right = TP + TN
- wrong= FP+FN
- all_test = len(x_test)
- all_y=len(y_test)
- accr = accuracy(right, all_test)*100
- print("accr:", accr)
+def my_error_calc(matrix,x_test,flag):
+     TN = matrix[0, 0]
+     FN = matrix[1, 0]
+     FP = matrix[0, 1]
+     TP = matrix[1, 1]
+     right = TP + TN
+     #wrong= FP+FN
+     all_test = len(x_test)
+     #all_y=len(y_test)
+     accr = accuracy(right, all_test)*100
+     rec = recall(TP, FN)
+     pre = precision(TP, FP)
+     f_sc = F_score(rec, pre)
 
- if accr!=np.nan:
-    print("error :", 100 - accr)
- rec = recall(TP, FN)
- print("recall :", rec)
- pre = precision(TP, FP)
- print("precision : ", pre)
- f_sc = F_score(rec, pre)
- print("F_score : ", f_sc)
- tpr = TPR(TP, FN)
- print("true positive rate-recall :", tpr)
- fpr = FPR(FP, TN)
- print("false positive rate :", fpr)
+     tpr = TPR(TP, FN)
+     fpr = FPR(FP, TN)
 
+     if flag==0:
+         print("accr:", accr)
+         if accr != np.nan:
+             print("error :", 100 - accr)
+         print("recall :", rec)
+         print("precision : ", pre)
+         print("F_score : ", f_sc)
+         print("true positive rate-recall :", tpr)
+         print("false positive rate :", fpr)
+
+
+     return accr,rec,pre,f_sc,tpr,fpr
 #--------------------------------------
 def accuracy(right,all_test):
     if all_test==0:

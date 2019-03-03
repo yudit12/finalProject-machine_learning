@@ -1,6 +1,3 @@
-import pandas as pd
-from sklearn.exceptions import UndefinedMetricWarning
-
 import csv_handle as csv_org
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
@@ -19,42 +16,47 @@ def changePath():
 
     os.chdir(path)
 #---------------------------------------
-def runAllCountries(file,col_to_split):#fillter_col = 'native-country'
+def splitData(file, country_name, col_to_split):
+    XMatrix, y, data_feature_names = orderDataForCountry(file, country_name, col_to_split)
+
+    X_train, X_test, y_train, y_test = train_test_split(XMatrix, y, test_size=0.3, random_state=100)
+    return X_train, X_test, y_train, y_test,data_feature_names
+
+def runAllCountries(file,col_to_split,country_compare_modle):#fillter_col = 'native-country'
 
     countries=list(set(list(file['native-country'])))
-    #countries = [' Dominican-Republic']
+    countries = country_compare_modle#[' Dominican-Republic']
     # del  the native-country  col from  the cuntry list
     if('native-country' in col_to_split):
         col_to_split.remove('native-country');
 
-
+    compare_modle=np.nan
+    compareX_test=[]
+    compareY_test = []
     for country_name in countries:#all countries without USA and '?'
 
         if country_name==' United-States' or country_name==' ?' or country_name==' Holand-Netherlands':
             continue
         else:
             print('country_name', country_name)
-
-            XMatrix, y,data_feature_names= orderDataForCountry(file,country_name,col_to_split)
-
-            X_train, X_test, y_train, y_test = train_test_split(XMatrix, y, test_size=0.3, random_state=100)
-            #print(X_test,len(X_test))
+            X_train, X_test, y_train, y_test,data_feature_names=splitData(file, country_name, col_to_split)
+            print('x test tree',X_test)
             model=treeForCountry(country_name,X_train, y_train,data_feature_names)
-            # print('len test',len(y_test))
-            # print('y test', y_test)
-            # print('x test', X_test)
+            print('country_name',country_name,country_compare_modle)
+            if country_name==country_compare_modle[0]:
+                compare_modle=model
+                compareX_test=X_test
+                compareY_test = y_test
 
-            if error.calc_error(X_test, model, y_test)==-1:
+
+            if error.calc_error(X_test, model, y_test,flag=0)==-1:
                 continue
-            # y_pred = error.prediction(X_test, model, y_test)
-            # y_test, matrix, accuracy = error.cal_accuracy(y_test, y_pred)
-            # if matrix.shape==(1, 1):
-            #     continue
-            # if matrix[0][1]==0 and matrix[1][1]==0:
-            #     error.my_error_calc(matrix, X_test, y_test)
-            # else:
-            #     error.understandable_method(y_test, y_pred)
 
+    print('#############################################\n'
+          '#########     compare models    #############\n'
+          '#############################################')
+    if  compare_modle!=np.nan and compareX_test!=[] and compareY_test!=[]:
+        errorTree(country_name, compare_modle, compareX_test, compareY_test)
 
 
 #--------------------------------------------------
@@ -101,7 +103,7 @@ def treeForCountry(country_name, X_train,y_train,data_feature_names):
 
         clf = tree.DecisionTreeClassifier(criterion="entropy", random_state=100)
 
-        clf = clf.fit(X_train,y_train)
+        clf.fit(X_train,y_train)
         # clf=train_using_gini(X_train, y_train)
 
         # Visualize data
@@ -129,4 +131,20 @@ def treeForCountry(country_name, X_train,y_train,data_feature_names):
         return clf
 
 
+
+# def errorTree(file,country_name,col_to_split):
+#     # if country_name == ' United-States' or country_name == ' ?' or country_name == ' Holand-Netherlands':
+#     #     return -1
+#     X_train, X_test, y_train, y_test, data_feature_names = splitData(file, country_name, col_to_split)
+#     print('X_test logistic',X_test)
+#     clf = tree.DecisionTreeClassifier(criterion="entropy", random_state=100)
+#     clf.fit(X_train, y_train)
+#     accr, rec, pre, f_sc, tpr, fpr=error.calc_error(X_test, clf, y_test,flag=1)
+#     error.printResult(country_name, ' DecisionTreeClassifier ', accr, rec, pre, f_sc, tpr, fpr)
+#
+
+
+def errorTree(country_name, clf,X_test, y_test):
+    accr, rec, pre, f_sc, tpr, fpr=error.calc_error(X_test, clf, y_test,flag=1)
+    error.printResult(country_name, ' DecisionTreeClassifier ', accr, rec, pre, f_sc, tpr, fpr)
 
