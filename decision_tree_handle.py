@@ -9,7 +9,7 @@ import error_handle as error
 import numpy as np
 
 def changePath():
-    path = 'countries_tree_gini'
+    path = 'countries_tree'
     os.path.dirname(path)
     if not os.path.exists(path):
         os.makedirs(path)
@@ -25,7 +25,7 @@ def splitData(file, country_name, col_to_split):
 def runAllCountries(file,col_to_split,country_compare_modle):#fillter_col = 'native-country'
 
     countries=list(set(list(file['native-country'])))
-    countries = country_compare_modle#[' Dominican-Republic']
+
     # del  the native-country  col from  the cuntry list
     if('native-country' in col_to_split):
         col_to_split.remove('native-country');
@@ -38,11 +38,12 @@ def runAllCountries(file,col_to_split,country_compare_modle):#fillter_col = 'nat
         if country_name==' United-States' or country_name==' ?' or country_name==' Holand-Netherlands':
             continue
         else:
-            print('country_name', country_name)
+            print('---------------------------------------------------')
+            print('---------country_name', country_name,'---------')
             X_train, X_test, y_train, y_test,data_feature_names=splitData(file, country_name, col_to_split)
-            print('x test tree',X_test)
-            model=treeForCountry(country_name,X_train, y_train,data_feature_names)
-            print('country_name',country_name,country_compare_modle)
+
+            model,typeModel=treeForCountry(country_name,X_train, y_train,data_feature_names)
+
             if country_name==country_compare_modle[0]:
                 compare_modle=model
                 compareX_test=X_test
@@ -56,55 +57,38 @@ def runAllCountries(file,col_to_split,country_compare_modle):#fillter_col = 'nat
           '#########     compare models    #############\n'
           '#############################################')
     if  compare_modle!=np.nan and compareX_test!=[] and compareY_test!=[]:
-        errorTree(country_name, compare_modle, compareX_test, compareY_test)
+        errorTree(country_compare_modle,typeModel, compare_modle, compareX_test, compareY_test)
 
 
 #--------------------------------------------------
 
 
-
-####
-
 def orderDataForCountry(file,country_name,col_to_split):
     fillter_col = 'native-country'
     fillter_feat = [country_name]
     df = csv_org.filter_data_by_feature(file, fillter_col, fillter_feat)
-    #col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'result']
     df = df.drop('native-country', axis='columns')
 
-
-    #print('df')
-    #print(df)
     for col_name in col_to_split:  # run on the num of cols
         col = LabelEncoder()
         df[col_name + '_n'] = col.fit_transform(df[col_name])
 
-    # print(col_to_split)
     df_n = df.drop(col_to_split, axis='columns')
     XMatrix = csv_org.x_matrix(df_n)
 
     y = csv_org.y_vector(df_n)
     data_feature_names = list(df_n)[:-1]
 
-#    df_n.to_csv('dt3.csv', index=False)
-#     print(df)
+
     return XMatrix,y,data_feature_names
 
-# Function to perform training with giniIndex.
-def train_using_gini(X_train,  y_train):
-    # Creating the classifier object
-    clf_gini = tree.DecisionTreeClassifier(criterion="gini")
-    # Performing training
-    clf_gini.fit(X_train,y_train)
-    return clf_gini
 
 #--------------------------------------------------
 def treeForCountry(country_name, X_train,y_train,data_feature_names):
-
-        clf = tree.DecisionTreeClassifier(criterion="entropy", random_state=100)
+        typeModel="gini"#gini/entropy
+        clf = tree.DecisionTreeClassifier(criterion=typeModel, random_state=100)
 
         clf.fit(X_train,y_train)
-        # clf=train_using_gini(X_train, y_train)
 
         # Visualize data
         dot_data = tree.export_graphviz(clf,
@@ -128,23 +112,16 @@ def treeForCountry(country_name, X_train,y_train,data_feature_names):
 
         name_img='tree%s.png'%country_name
         graph.write_png(name_img)
-        return clf
+        return clf,typeModel
 
 
 
-# def errorTree(file,country_name,col_to_split):
-#     # if country_name == ' United-States' or country_name == ' ?' or country_name == ' Holand-Netherlands':
-#     #     return -1
-#     X_train, X_test, y_train, y_test, data_feature_names = splitData(file, country_name, col_to_split)
-#     print('X_test logistic',X_test)
-#     clf = tree.DecisionTreeClassifier(criterion="entropy", random_state=100)
-#     clf.fit(X_train, y_train)
-#     accr, rec, pre, f_sc, tpr, fpr=error.calc_error(X_test, clf, y_test,flag=1)
-#     error.printResult(country_name, ' DecisionTreeClassifier ', accr, rec, pre, f_sc, tpr, fpr)
-#
 
 
-def errorTree(country_name, clf,X_test, y_test):
+def errorTree(country_name,typeModel, clf,X_test, y_test):
     accr, rec, pre, f_sc, tpr, fpr=error.calc_error(X_test, clf, y_test,flag=1)
-    error.printResult(country_name, ' DecisionTreeClassifier ', accr, rec, pre, f_sc, tpr, fpr)
+    print('--------DecisionTree type',typeModel,'---------------')
+    modelName=' DecisionTreeClassifier with '
+    error.printResult(country_name[0],modelName , accr, rec, pre, f_sc, tpr, fpr)
+
 

@@ -10,7 +10,7 @@ def divDataByKFold(XMatrix, y, k_parameter):  # div data to test and train by k 
 
     kf = KFold(n_splits=k_parameter)  # Define the split - into 10 folds
     kf.get_n_splits(XMatrix)  # returns the number of splitting iterations in the cross-validator
-    print('kf',kf.split(XMatrix))
+
     X_train_matrix = []
     X_test_matrix = []
     y_train_matrix = []
@@ -67,12 +67,8 @@ def indexMinElement(vec):  # return the index of min element in vector
 def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_test_matrix, k_parameter=10):
 
 
-
-    #C_param_range = [ np.inf, 10, 1, 0.5,(1/3),0.1]
-
     C_param_range = [ 1, 0.5,(1/3),0.1]
 
-    #C_param_range = [ 10, 1, 0.5,(1/3),0.1]
 
     testErrOneModel = [0.0] * k_parameter
     testErrAllModels = []
@@ -96,8 +92,6 @@ def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_tes
     print('')
     print('The optimal lambda', 1 / optimalLambda)
     print('The average error of the model with this lambda is:', testErrAllModels[indexBetterModel])
-
-    #  print('The average error of the model with lambda=0 is:', testErrAllModels[0])
 
     return (C_param_range, testErrAllModels, optimalLambda)
 
@@ -153,8 +147,9 @@ def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow):
 
 def errorOfmodelOptimalLmbda(optimalLambda,XMatrix, y,country_name):
     X_train, X_test, y_train, y_test = train_test_split(XMatrix, y, test_size=0.3, random_state=100)
-    #print('X_test logistic',X_test)
     logreg = LogisticRegression(C=optimalLambda, solver='lbfgs', penalty='l2')
     logreg.fit(X_train, y_train)
     accr, rec, pre, f_sc, tpr, fpr=error.calc_error(X_test, logreg, y_test,flag=1)
-    error.printResult(country_name, ' LogisticRegression ', accr, rec, pre, f_sc, tpr, fpr)
+    print('------------------------------------------------')
+    print('--------------LogisticRegression----------------')
+    error.printResult(country_name[0], ' LogisticRegression ', accr, rec, pre, f_sc, tpr, fpr)

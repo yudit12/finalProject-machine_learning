@@ -105,14 +105,9 @@ for country_name in countries:#all countries without USA and '?'
                 dest = graph.get_node(str(edges[edge][i]))[0]
                 dest.set_fillcolor(colors[i])
 
-        #img = cv2.imread(name_img, 1)
 
         name_img='tree%s.png'%country_name
         graph.write_png(name_img)
 
-
-        #cv2.imwrite(os.path.join(path, 'tree%s.png'%country_name), graph)
-        #cv2.waitKey(0)
-        #urllib.urlretrieve('url of picture' 'name of file to save to')
 
 

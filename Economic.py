@@ -12,12 +12,11 @@ def main():
     country_name = [' Cuba']
     df = csv_org.filter_data_by_feature(df_org, 'native-country', country_name)
     df = df.reset_index(drop=True)
-    df.to_csv('data.csv', index=False)
+    #df.to_csv('data.csv', index=False)
 
     col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex',
                     'native-country', 'result']
     csv_org.insert_all_col(df, col_to_split)
-    df.to_csv('dtOP.csv', index=False)
 
     csv_org.normalizationAll(df)  # normalization data
 
@@ -33,7 +32,6 @@ def main():
 
     C_param_range, testErrAllModels,optimalLambda=\
         lgr.k_fold_cross_validation(X_train, y_train, X_test,y_test, k_parameter=10)
-    #partition=0#all the errors will be displayed for this partition of kfold
 
     lgr.draw_graph(C_param_range, testErrAllModels)
     lgr.graph_learning_groups(XMatrix,y,optimalLambda,len(y))
@@ -47,7 +45,6 @@ def main():
     dtree.changePath()
     dtree.runAllCountries(df_org,col_to_split,country_name)
 
-#    dtree.errorTree(df_org,country_name,col_to_split)
     lgr.errorOfmodelOptimalLmbda(optimalLambda, XMatrix, y, country_name)
 
 if __name__ == "__main__":
