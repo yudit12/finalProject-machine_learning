@@ -46,7 +46,7 @@ def cal_accuracy(y_test, y_pred,x_test):
     and sample average -only for multilabel classification- NOT IN  OUR CASE
     """
     print("Report :",
-          classification_report(y_test, y_pred,target_names="1"))
+          classification_report(y_test, y_pred))
 
 
 #-------------------------------------

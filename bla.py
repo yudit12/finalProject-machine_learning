@@ -3,6 +3,7 @@ from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 import csv_handle as csv_org
@@ -31,7 +32,6 @@ def splitdataset(balance_data):
         X, Y, test_size=0.3, random_state=100)
 
     return X, Y, X_train, X_test, y_train, y_test
-
 
 
 def main():
@@ -66,21 +66,17 @@ def main():
 
     csv_org.normalizationAll(df)  # normalization data
 
-    # XMatrix = csv_org.x_matrix(df)
-    # y = csv_org.y_vector(df)
-    # print(df)
-    # print(df)
-
 
 #####################3
     XMatrix = csv_org.x_matrix(df)
     y = csv_org.y_vector(df)
     X, Y, X_train, X_test, y_train, y_test = splitdataset(df)
-
+    clf = SGDClassifier(loss="hinge", penalty="l2", max_iter=5)
+    clf.fit(X, y)
     # print(X_train)
-    logreg =LogisticRegression(C=0.5, solver='lbfgs', penalty='l2').fit(XMatrix,y)
+    # logreg =LogisticRegression(C=0.5, solver='lbfgs', penalty='l2').fit(XMatrix,y)
     # print(logreg)
-    y_pred=error.prediction(XMatrix, logreg,y )
+    # y_pred=error.prediction(XMatrix, logreg,y )
     # error.cal_accuracy(y_test, y_pred, X_test)
 
 # Calling main function
