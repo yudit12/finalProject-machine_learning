@@ -3,23 +3,6 @@ import pandas as pd
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 
-def selectFeaturer(X, y):
-    numSimple=len(y)#number of row
-    print('num row train',numSimple)
-    numFeatures=int(numSimple/10)
-    print('numFeatures', numFeatures)
-    print('x')
-    print(X)
-    bestfeatures = SelectKBest(score_func=chi2, k=10)
-    fit = bestfeatures.fit(X, y)
-    dfscores = pd.DataFrame(fit.scores_)
-    dfcolumns = pd.DataFrame(X.columns)
-    # concat two dataframes for better visualization
-    featureScores = pd.concat([dfcolumns, dfscores], axis=1)
-    featureScores.columns = ['Specs', 'Score']  # naming the dataframe columns
-    print(featureScores.nlargest(numFeatures, 'Score'))  # print best features
-
-
 #--------------------Methods-----------------------------
 
 def filter_data_by_feature(df,colName,feat_name):
