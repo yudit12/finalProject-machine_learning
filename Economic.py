@@ -36,6 +36,7 @@ def main():
 
     XMatrix = csv_org.x_matrix(df)
     y = csv_org.y_vector(df)
+    # print(df)
 
     X_train_matrix, X_test_matrix, y_train_matrix, y_test_matrix \
         = lgr.divDataByKFold(XMatrix, y, k_parameter=10)  # Define the split - into 10 folds
@@ -46,8 +47,9 @@ def main():
     lgr.draw_graph(C_param_range, testErrAllModels)
     lgr.graph_learning_groups(XMatrix,y,optimalLambda,len(y))
 
-    dtree.changePath()
-    dtree.runAllCountries(df_org,col_to_split)
+    # dtree.changePath()
+    # dtree.runAllCountries(df_org,col_to_split)
+
 if __name__ == "__main__":
     main()
 

@@ -1,13 +1,13 @@
 import pandas as pd
 import csv_handle as csv_org
 from sklearn.preprocessing import LabelEncoder
-
+from sklearn.model_selection import train_test_split
 import pydotplus
 from sklearn import tree
 import collections
 import os
-
-
+import error_handle as error
+import numpy as np
 
 def changePath():
 
@@ -16,20 +16,34 @@ def changePath():
 #---------------------------------------
 def runAllCountries(file,col_to_split):#fillter_col = 'native-country'
 
-    countries=list(set(list(file['native-country'])))
-    #countries = [' Greece']
-
+    # countries=list(set(list(file['native-country'])))
+    countries = [' Cuba']
+    # del  the native-country  col from  the cuntry list
     if('native-country' in col_to_split):
         col_to_split.remove('native-country');
 
 
+
     for country_name in countries:#all countries without USA and '?'
-        if country_name==' United-States' or country_name==' ?':
+        if country_name==' United-States' or country_name==' ?' or country_name==' Holand-Netherlands':
             continue
         else:
             XMatrix, y,data_feature_names= orderDataForCountry(file,country_name,col_to_split)
-            treeForCountry(country_name,XMatrix, y,data_feature_names)
+
+            X_train, X_test, y_train, y_test = train_test_split(XMatrix, y, test_size=0.3, random_state=100)
+            print(X_test,len(X_test))
+            # print(country_name)
+            # print(XMatrix)
+            model=treeForCountry(country_name,X_train, y_train,data_feature_names)
+            y_pred=error.prediction(X_test, model, y_test)
+            error.cal_accuracy(y_test, y_pred,X_test)
+
+
 #--------------------------------------------------
+
+
+
+####
 
 def orderDataForCountry(file,country_name,col_to_split):
     fillter_col = 'native-country'
@@ -53,13 +67,24 @@ def orderDataForCountry(file,country_name,col_to_split):
     data_feature_names = list(df_n)[:-1]
 
 #    df_n.to_csv('dt3.csv', index=False)
-
+    print(df)
     return XMatrix,y,data_feature_names
-#--------------------------------------------------
-def treeForCountry(country_name, XMatrix,y,data_feature_names):
 
-        clf = tree.DecisionTreeClassifier()
-        clf = clf.fit(XMatrix,y)
+# Function to perform training with giniIndex.
+def train_using_gini(X_train,  y_train):
+    # Creating the classifier object
+    clf_gini = tree.DecisionTreeClassifier(criterion="gini")
+    # Performing training
+    clf_gini.fit(X_train,y_train)
+    return clf_gini
+
+#--------------------------------------------------
+def treeForCountry(country_name, X_train,y_train,data_feature_names):
+
+        clf = tree.DecisionTreeClassifier(criterion="gini", random_state=100)
+
+        clf = clf.fit(X_train,y_train)
+        # clf=train_using_gini(X_train, y_train)
 
         # Visualize data
         dot_data = tree.export_graphviz(clf,
@@ -83,6 +108,7 @@ def treeForCountry(country_name, XMatrix,y,data_feature_names):
 
         name_img='tree%s.png'%country_name
         graph.write_png(name_img)
+        return clf
 
 
 

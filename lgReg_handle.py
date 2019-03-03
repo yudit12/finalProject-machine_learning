@@ -81,6 +81,7 @@ def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_tes
         for i in range(k_parameter):
             logreg = LogisticRegression(C=c, solver='lbfgs', penalty='l2').fit(X_train_matrix[i], y_train_matrix[i])
             errI = logreg.predict(X_test_matrix[i])
+
             testErrOneModel[i] = float(sum(errI != y_test_matrix[i])) / len(y_test_matrix[i])
         avgErr = np.mean(testErrOneModel)
         print('The average error value of lambda=', 1 / c, 'is', avgErr)
