@@ -33,7 +33,7 @@ def cal_accuracy(y_test, y_pred,x_test):
     accuracy= accuracy_score(y_test, y_pred) * 100
     print("Accuracy : ",accuracy)
     print("error :",100-accuracy)
-    # my_error_calc(matrix, x_test,y_test)
+    my_error_calc(matrix, x_test,y_test)
 
 
 
@@ -46,7 +46,7 @@ def cal_accuracy(y_test, y_pred,x_test):
     and sample average -only for multilabel classification- NOT IN  OUR CASE
     """
     print("Report :",
-          classification_report(y_test, y_pred))
+          classification_report(y_test, y_pred,target_names="1"))
 
 
 #-------------------------------------

@@ -78,9 +78,9 @@ def main():
     X, Y, X_train, X_test, y_train, y_test = splitdataset(df)
 
     # print(X_train)
-    logreg =LogisticRegression(C=0.5, solver='lbfgs', penalty='l2').fit(X_train,X_test)
+    logreg =LogisticRegression(C=0.5, solver='lbfgs', penalty='l2').fit(XMatrix,y)
     # print(logreg)
-    y_pred=error.prediction(X, logreg, Y)
+    y_pred=error.prediction(XMatrix, logreg,y )
     # error.cal_accuracy(y_test, y_pred, X_test)
 
 # Calling main function

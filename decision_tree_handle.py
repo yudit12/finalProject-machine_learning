@@ -70,7 +70,7 @@ def orderDataForCountry(file,country_name,col_to_split):
     data_feature_names = list(df_n)[:-1]
 
 #    df_n.to_csv('dt3.csv', index=False)
-    print(df)
+#     print(df)
     return XMatrix,y,data_feature_names
 
 # Function to perform training with giniIndex.
