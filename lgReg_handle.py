@@ -2,7 +2,7 @@ from sklearn.model_selection import KFold
 from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
 import numpy as np
-
+import error_handle as error
 
 
 def divDataByKFold(XMatrix, y, k_parameter):  # div data to test and train by k fold
@@ -84,6 +84,7 @@ def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_tes
             errI = logreg.predict(X_test_matrix[i])
 
             testErrOneModel[i] = float(sum(errI != y_test_matrix[i])) / len(y_test_matrix[i])
+            error.calc_error(X_test_matrix[i], logreg, y_test_matrix[i])
         avgErr = np.mean(testErrOneModel)
         print('The average error value of lambda=', 1 / c, 'is', avgErr)
         testErrAllModels.append(avgErr)

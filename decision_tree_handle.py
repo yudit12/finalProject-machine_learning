@@ -30,33 +30,30 @@ def runAllCountries(file,col_to_split):#fillter_col = 'native-country'
 
     for country_name in countries:#all countries without USA and '?'
 
-        print('country_name',country_name)
-
         if country_name==' United-States' or country_name==' ?' or country_name==' Holand-Netherlands':
             continue
         else:
+            print('country_name', country_name)
+
             XMatrix, y,data_feature_names= orderDataForCountry(file,country_name,col_to_split)
 
             X_train, X_test, y_train, y_test = train_test_split(XMatrix, y, test_size=0.3, random_state=100)
-            print(X_test,len(X_test))
-            # print(country_name)
-            # print(XMatrix)
+            #print(X_test,len(X_test))
             model=treeForCountry(country_name,X_train, y_train,data_feature_names)
-            print('len test',len(y_test))
-            print('y test', y_test)
-            print('x test', X_test)
-            y_pred = error.prediction(X_test, model, y_test)
-            y_test, matrix, accuracy = error.cal_accuracy(y_test, y_pred)
-            print('shape ',matrix.shape)
-            if matrix.shape==(1, 1):
-                print('small shape')
+            # print('len test',len(y_test))
+            # print('y test', y_test)
+            # print('x test', X_test)
+
+            if error.calc_error(X_test, model, y_test)==-1:
                 continue
-            if matrix[0][1]==0 and matrix[1][1]==0:
-                print('in some####################')
-                error.my_error_calc(matrix, X_test, y_test)
-            else:
-                print('@@@@@ no in some')
-                error.understandable_method(y_test, y_pred)
+            # y_pred = error.prediction(X_test, model, y_test)
+            # y_test, matrix, accuracy = error.cal_accuracy(y_test, y_pred)
+            # if matrix.shape==(1, 1):
+            #     continue
+            # if matrix[0][1]==0 and matrix[1][1]==0:
+            #     error.my_error_calc(matrix, X_test, y_test)
+            # else:
+            #     error.understandable_method(y_test, y_pred)
 
 
 

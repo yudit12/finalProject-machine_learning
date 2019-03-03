@@ -9,6 +9,18 @@ from sklearn.preprocessing import LabelEncoder
 import numpy as np
 import csv_handle as csv_org
 
+def calc_error(X_test, model, y_test):
+    y_pred = prediction(X_test, model, y_test)
+    y_test, matrix, accuracy = cal_accuracy(y_test, y_pred)
+    if matrix.shape == (1, 1):
+        return -1;
+    if matrix[0][1] == 0 and matrix[1][1] == 0:
+        my_error_calc(matrix, X_test, y_test)
+    elif matrix[0][0] == 0 and matrix[1][0] == 0:
+        my_error_calc(matrix, X_test, y_test)
+    else:
+        understandable_method(y_test, y_pred)
+
 
 # Function to make predictions
 def prediction(X_test, clf_object,y_test):
