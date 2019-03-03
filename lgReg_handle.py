@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+
 def divDataByKFold(XMatrix, y, k_parameter):  # div data to test and train by k fold
 
     kf = KFold(n_splits=k_parameter)  # Define the split - into 10 folds
