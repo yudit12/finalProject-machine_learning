@@ -65,8 +65,7 @@ def indexMinElement(vec):  # return the index of min element in vector
 
 # -------------------------------------
 def k_fold_cross_validation(X_train_matrix, y_train_matrix, X_test_matrix, y_test_matrix, k_parameter=10):
-
-
+    #C_param_range = [ np.inf, 10, 1, 0.5,(1/3),0.1]
     C_param_range = [ 1, 0.5,(1/3),0.1]
 
 
