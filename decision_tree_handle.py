@@ -99,7 +99,7 @@ def train_using_gini(X_train,  y_train):
 #--------------------------------------------------
 def treeForCountry(country_name, X_train,y_train,data_feature_names):
 
-        clf = tree.DecisionTreeClassifier(criterion="gini", random_state=100)
+        clf = tree.DecisionTreeClassifier(criterion="entropy", random_state=100)
 
         clf = clf.fit(X_train,y_train)
         # clf=train_using_gini(X_train, y_train)

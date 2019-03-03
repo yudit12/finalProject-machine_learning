@@ -67,6 +67,8 @@ def cal_accuracy(y_test, y_pred):
     weighted average -averaging the support-weighted mean per label
     and sample average -only for multilabel classification- NOT IN  OUR CASE
     """
+   # print("Report :",
+   #       classification_report(y_test, y_pred))
 
     # target_names = ['class 0', 'class 1']
     # print("Report :",
