@@ -1,4 +1,6 @@
 import pandas as pd
+from sklearn.exceptions import UndefinedMetricWarning
+
 import csv_handle as csv_org
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
@@ -19,15 +21,17 @@ def changePath():
 #---------------------------------------
 def runAllCountries(file,col_to_split):#fillter_col = 'native-country'
 
-    # countries=list(set(list(file['native-country'])))
-    countries = [' Cuba']
+    countries=list(set(list(file['native-country'])))
+    #countries = [' Dominican-Republic']
     # del  the native-country  col from  the cuntry list
     if('native-country' in col_to_split):
         col_to_split.remove('native-country');
 
 
-
     for country_name in countries:#all countries without USA and '?'
+
+        print('country_name',country_name)
+
         if country_name==' United-States' or country_name==' ?' or country_name==' Holand-Netherlands':
             continue
         else:
@@ -38,8 +42,22 @@ def runAllCountries(file,col_to_split):#fillter_col = 'native-country'
             # print(country_name)
             # print(XMatrix)
             model=treeForCountry(country_name,X_train, y_train,data_feature_names)
-            y_pred=error.prediction(X_test, model, y_test)
-            error.cal_accuracy(y_test, y_pred,X_test)
+            print('len test',len(y_test))
+            print('y test', y_test)
+            print('x test', X_test)
+            y_pred = error.prediction(X_test, model, y_test)
+            y_test, matrix, accuracy = error.cal_accuracy(y_test, y_pred)
+            print('shape ',matrix.shape)
+            if matrix.shape==(1, 1):
+                print('small shape')
+                continue
+            if matrix[0][1]==0 and matrix[1][1]==0:
+                print('in some####################')
+                error.my_error_calc(matrix, X_test, y_test)
+            else:
+                print('@@@@@ no in some')
+                error.understandable_method(y_test, y_pred)
+
 
 
 #--------------------------------------------------

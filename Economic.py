@@ -30,9 +30,9 @@ def main():
     col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex',
                     'native-country', 'result']
     csv_org.insert_all_col(df, col_to_split)
-
+    df.to_csv('dtOP.csv', index=False)
     csv_org.normalizationAll(df)  # normalization data
-    print('end norm')
+
 
     XMatrix = csv_org.x_matrix(df)
     y = csv_org.y_vector(df)
