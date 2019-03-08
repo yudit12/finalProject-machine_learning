@@ -180,12 +180,3 @@ def dif_alg_errors(logistic_error,tree_errors,tree_type):
     fig.tight_layout()
     plt.show()
 
-tree_type='entropy'
-logistic_error=(82.8, 50, 60, 54.4)
-entropy_error = (82.7, 95.65, 84.61, 89.7)
-dif_alg_errors(logistic_error,entropy_error,tree_type)
-#------
-tree_type='gini'
-logistic_error=(82.7,33.3,66.6,44.4)
-gini_error=(75,66.6,44.4,53.3,)
-dif_alg_errors(logistic_error,gini_error,tree_type)
