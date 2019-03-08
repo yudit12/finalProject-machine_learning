@@ -9,10 +9,10 @@ def main():
     path = 'economic_data.csv'
     df_org = pd.read_csv(path)
 
-    country_name = [' Cuba']#,' Ecuador',' Germany']
+    country_name = [' Cuba',' Philippines',' Ecuador']
     df = csv_org.filter_data_by_feature(df_org, 'native-country', country_name)
     df = df.reset_index(drop=True)
-    # df.to_csv('data.csv', index=False)
+    df.to_csv('data.csv', index=False)
 
     col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex',
                     'native-country', 'result']
