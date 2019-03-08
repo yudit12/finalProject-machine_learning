@@ -116,7 +116,7 @@ def draw_graph(C_param_range, testErrAllModels):
 
 
 def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow):
-    error.graph_learning_groups(XMatrix,y,optimalLambda,numAllRow,'LogisticRegression','')
+    error.graph_learning_groups(XMatrix,y,optimalLambda,numAllRow,'LogisticRegression','',max_depth=-1)
 
 def errorOfmodelOptimalLmbda(optimalLambda,XMatrix, y,country_name):
     X_train, X_test, y_train, y_test = train_test_split(XMatrix, y, test_size=0.3, random_state=100)

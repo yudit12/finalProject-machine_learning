@@ -108,7 +108,7 @@ def treeForCountry(country_name, X_train,y_train,data_feature_names,typeModel):
 
 
 
-def errorTree(country_name,typeModel,df_org,col_to_split):
+def errorTree(country_name,typeModel,df_org,col_to_split,max_depth):
     print('errorTree')
     print(df_org)
 
@@ -129,10 +129,10 @@ def errorTree(country_name,typeModel,df_org,col_to_split):
     modelName=' DecisionTreeClassifier with '
     error.printResult(country_name[0],modelName , accr, rec, pre, f_sc, tpr, fpr)
 
-    graph_learning_groups(XMatrix, y, len(y), typeModel)
+    graph_learning_groups(XMatrix, y, len(y), typeModel,max_depth)
 
 
-def graph_learning_groups(XMatrix,y,numAllRow,typeModel):
-    error.graph_learning_groups(XMatrix,y,-1,numAllRow,'DecisionTreeClassifier',typeModel)
+def graph_learning_groups(XMatrix,y,numAllRow,typeModel,max_depth):
+    error.graph_learning_groups(XMatrix,y,-1,numAllRow,'DecisionTreeClassifier',typeModel,max_depth)
 
 

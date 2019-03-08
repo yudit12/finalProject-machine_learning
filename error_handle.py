@@ -137,8 +137,10 @@ def FPR(FP,TN):
     return fpr
 
 # --------------------------------
-def dif_alg_errors(logistic_error,tree_errors,tree_type):
 
+#def dif_alg_errors(logistic_error,tree_errors,tree_type):
+
+def dif_alg_errors(logistic_error, entropy_error, gini_error):
 
 
     n_groups = 4
@@ -149,8 +151,10 @@ def dif_alg_errors(logistic_error,tree_errors,tree_type):
     std_logistic= (2, 3, 4, 1)
 
     # tree_entropy = (82.7, 95.65, 84.61, 89.7)
-    tree_entropy=tree_errors
+    tree_entropy=entropy_error
     std_entropy = (3, 5, 2, 3)
+    tree_gini = gini_error
+    std_gini = (2, 3, 4, 1)
 
 
     fig, ax = plt.subplots()
@@ -169,7 +173,12 @@ def dif_alg_errors(logistic_error,tree_errors,tree_type):
     rects2 = ax.bar(index + bar_width, tree_entropy, bar_width,
                     alpha=opacity, color='r',
                     yerr=std_entropy, error_kw=error_config,
-                    label=tree_type)
+                    label="tree-entropy")
+
+    rects3 = ax.bar(index + bar_width*2, tree_gini, bar_width,
+                    alpha=opacity, color='y',
+                    yerr=std_gini, error_kw=error_config,
+                    label="tree-gini")
 
     ax.set_xlabel('type')
     ax.set_ylabel('% error')
@@ -181,7 +190,8 @@ def dif_alg_errors(logistic_error,tree_errors,tree_type):
     fig.tight_layout()
     plt.show()
 
-def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow,model_name,type):
+
+def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow,model_name,type,max_depth):
     learNum=int(numAllRow*0.7)
     learNum=int(learNum/10)*10+1
 
@@ -197,7 +207,7 @@ def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow,model_name,type):
         if model_name== 'LogisticRegression':
             model = LogisticRegression(C=optimalLambda, solver='lbfgs', penalty='l2').fit(xTrainMatrix, yTraintVec)
         elif model_name=='DecisionTreeClassifier':
-            model = tree.DecisionTreeClassifier(criterion=type, max_depth=3,random_state=100).fit(xTrainMatrix, yTraintVec)
+            model = tree.DecisionTreeClassifier(criterion=type, max_depth=max_depth,random_state=100).fit(xTrainMatrix, yTraintVec)
         errTest = model.predict(xTestMatrix)
 
         errAvg.append(float(sum(errTest != yTestVec)) / len(yTestVec))
@@ -214,3 +224,13 @@ def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow,model_name,type):
 
     plt.legend()
     plt.show()
+
+# tree_type = 'entropy'
+# logistic_error = (82.8, 50, 60, 54.4)
+# entropy_error = (82.7, 95.65, 84.61, 89.7)
+# gini_error = (75, 66.6, 44.4, 53.3)
+# dif_alg_errors(logistic_error, entropy_error, gini_error)
+# ------
+# tree_type = 'gini'
+# # logistic_error = (82.7, 33.3, 66.6, 44.4)
+
