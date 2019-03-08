@@ -197,7 +197,7 @@ def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow,model_name,type):
         if model_name== 'LogisticRegression':
             model = LogisticRegression(C=optimalLambda, solver='lbfgs', penalty='l2').fit(xTrainMatrix, yTraintVec)
         elif model_name=='DecisionTreeClassifier':
-            model = tree.DecisionTreeClassifier(criterion=type, random_state=100).fit(xTrainMatrix, yTraintVec)
+            model = tree.DecisionTreeClassifier(criterion=type, max_depth=3,random_state=100).fit(xTrainMatrix, yTraintVec)
         errTest = model.predict(xTestMatrix)
 
         errAvg.append(float(sum(errTest != yTestVec)) / len(yTestVec))
