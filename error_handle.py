@@ -134,7 +134,7 @@ def FPR(FP,TN):
     return fpr
 
 # --------------------------------
-def dif_alg_errors(logistic_error,tree_errors,tree_type):
+def dif_alg_errors(logistic_error, entropy_error, gini_error):
     import numpy as np
     from matplotlib import pyplot as plt
     import numpy as np
@@ -148,8 +148,10 @@ def dif_alg_errors(logistic_error,tree_errors,tree_type):
     std_logistic= (2, 3, 4, 1)
 
     # tree_entropy = (82.7, 95.65, 84.61, 89.7)
-    tree_entropy=tree_errors
+    tree_entropy=entropy_error
     std_entropy = (3, 5, 2, 3)
+    tree_gini = gini_error
+    std_gini = (2, 3, 4, 1)
 
 
     fig, ax = plt.subplots()
@@ -168,7 +170,12 @@ def dif_alg_errors(logistic_error,tree_errors,tree_type):
     rects2 = ax.bar(index + bar_width, tree_entropy, bar_width,
                     alpha=opacity, color='r',
                     yerr=std_entropy, error_kw=error_config,
-                    label=tree_type)
+                    label="tree-entropy")
+
+    rects3 = ax.bar(index + bar_width*2, tree_gini, bar_width,
+                    alpha=opacity, color='y',
+                    yerr=std_gini, error_kw=error_config,
+                    label="tree-gini")
 
     ax.set_xlabel('type')
     ax.set_ylabel('% error')
@@ -179,4 +186,13 @@ def dif_alg_errors(logistic_error,tree_errors,tree_type):
 
     fig.tight_layout()
     plt.show()
+
+# tree_type = 'entropy'
+# logistic_error = (82.8, 50, 60, 54.4)
+# entropy_error = (82.7, 95.65, 84.61, 89.7)
+# gini_error = (75, 66.6, 44.4, 53.3)
+# dif_alg_errors(logistic_error, entropy_error, gini_error)
+# ------
+# tree_type = 'gini'
+# # logistic_error = (82.7, 33.3, 66.6, 44.4)
 
