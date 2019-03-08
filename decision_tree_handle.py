@@ -3,6 +3,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 import pydotplus
 from sklearn import tree
+import matplotlib.pyplot as plt
 import collections
 import os
 import error_handle as error
@@ -17,22 +18,22 @@ def changePath():
     os.chdir(path)
 #---------------------------------------
 def splitData(file, country_name, col_to_split):
-    XMatrix, y, data_feature_names = orderDataForCountry(file, country_name, col_to_split)
+
+    XMatrix, y, data_feature_names,df_n = orderDataForCountry(file, country_name, col_to_split)
 
     X_train, X_test, y_train, y_test = train_test_split(XMatrix, y, test_size=0.3, random_state=100)
-    return X_train, X_test, y_train, y_test,data_feature_names
 
-def runAllCountries(file,col_to_split,country_compare_modle):#fillter_col = 'native-country'
+    return XMatrix, y,X_train, X_test, y_train, y_test,data_feature_names,df_n
+#--------------------------------------------------------------------
+def runAllCountries(file,col_to_split,country_compare_modle,typeModel):
 
     countries=list(set(list(file['native-country'])))
-
+    print('countries',countries)
     # del  the native-country  col from  the cuntry list
     if('native-country' in col_to_split):
-        col_to_split.remove('native-country');
+        col_to_split.remove('native-country')
 
-    compare_modle=np.nan
-    compareX_test=[]
-    compareY_test = []
+
     for country_name in countries:#all countries without USA and '?'
 
         if country_name==' United-States' or country_name==' ?' or country_name==' Holand-Netherlands':
@@ -40,24 +41,14 @@ def runAllCountries(file,col_to_split,country_compare_modle):#fillter_col = 'nat
         else:
             print('---------------------------------------------------')
             print('---------country_name', country_name,'---------')
-            X_train, X_test, y_train, y_test,data_feature_names=splitData(file, country_name, col_to_split)
+            XMatrix, y,X_train, X_test, y_train, y_test,data_feature_names,df_n=splitData(file, [country_name], col_to_split)
 
-            model,typeModel=treeForCountry(country_name,X_train, y_train,data_feature_names)
-
-            if country_name==country_compare_modle[0]:
-                compare_modle=model
-                compareX_test=X_test
-                compareY_test = y_test
+            model=treeForCountry(country_name,X_train, y_train,data_feature_names,typeModel)
 
 
             if error.calc_error(X_test, model, y_test,flag=0)==-1:
                 continue
 
-    print('#############################################\n'
-          '#########     compare models    #############\n'
-          '#############################################')
-    if  compare_modle!=np.nan and compareX_test!=[] and compareY_test!=[]:
-        errorTree(country_compare_modle,typeModel, compare_modle, compareX_test, compareY_test)
 
 
 #--------------------------------------------------
@@ -65,27 +56,26 @@ def runAllCountries(file,col_to_split,country_compare_modle):#fillter_col = 'nat
 
 def orderDataForCountry(file,country_name,col_to_split):
     fillter_col = 'native-country'
-    fillter_feat = [country_name]
+    fillter_feat = country_name
+
     df = csv_org.filter_data_by_feature(file, fillter_col, fillter_feat)
     df = df.drop('native-country', axis='columns')
 
     for col_name in col_to_split:  # run on the num of cols
         col = LabelEncoder()
         df[col_name + '_n'] = col.fit_transform(df[col_name])
-
     df_n = df.drop(col_to_split, axis='columns')
     XMatrix = csv_org.x_matrix(df_n)
-
     y = csv_org.y_vector(df_n)
     data_feature_names = list(df_n)[:-1]
 
 
-    return XMatrix,y,data_feature_names
+    return XMatrix,y,data_feature_names,df_n
 
 
 #--------------------------------------------------
-def treeForCountry(country_name, X_train,y_train,data_feature_names):
-        typeModel="gini"#gini/entropy
+def treeForCountry(country_name, X_train,y_train,data_feature_names,typeModel):
+
         clf = tree.DecisionTreeClassifier(criterion=typeModel, random_state=100)
 
         clf.fit(X_train,y_train)
@@ -112,16 +102,37 @@ def treeForCountry(country_name, X_train,y_train,data_feature_names):
 
         name_img='tree%s.png'%country_name
         graph.write_png(name_img)
-        return clf,typeModel
+        return clf
 
 
 
 
 
-def errorTree(country_name,typeModel, clf,X_test, y_test):
+def errorTree(country_name,typeModel,df_org,col_to_split):
+    print('errorTree')
+    print(df_org)
+
+    print(country_name)
+
+
+    if('native-country' in col_to_split):
+        col_to_split.remove('native-country')
+
+    XMatrix, y,X_train, X_test, y_train, y_test, data_feature_names,df=splitData(df_org, country_name, col_to_split)
+    print('XMatrix',XMatrix,'\ny', y,'\nX_train',X_train, '\nX_test', X_test,'\ny_train', y_train,'\ny_test' ,y_test)
+    df.to_csv('data1.csv', index=False)
+    clf = tree.DecisionTreeClassifier(criterion=typeModel, random_state=100)
+    clf.fit(X_train, y_train)
+
     accr, rec, pre, f_sc, tpr, fpr=error.calc_error(X_test, clf, y_test,flag=1)
     print('--------DecisionTree type',typeModel,'---------------')
     modelName=' DecisionTreeClassifier with '
     error.printResult(country_name[0],modelName , accr, rec, pre, f_sc, tpr, fpr)
+
+    graph_learning_groups(XMatrix, y, len(y), typeModel)
+
+
+def graph_learning_groups(XMatrix,y,numAllRow,typeModel):
+    error.graph_learning_groups(XMatrix,y,-1,numAllRow,'DecisionTreeClassifier',typeModel)
 
 

@@ -116,33 +116,7 @@ def draw_graph(C_param_range, testErrAllModels):
 
 
 def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow):
-    learNum=int(numAllRow*0.7)
-    learNum=int(learNum/10)*10+1
-
-    learningGroups=np.array(range(10,learNum,10))
-    errAvg = []
-    errAvgTrain=[]
-    xTestMatrix=XMatrix[learNum:]
-    yTestVec = y[learNum:]
-
-    for rowTrains in learningGroups:
-        xTrainMatrix = XMatrix[0:rowTrains]
-        yTraintVec = y[0:rowTrains]
-        logreg = LogisticRegression(C=optimalLambda, solver='lbfgs', penalty='l2').fit(xTrainMatrix, yTraintVec)
-        errTest = logreg.predict(xTestMatrix)
-        errAvg.append(float(sum(errTest != yTestVec)) / len(yTestVec))
-
-        errTrain = logreg.predict(xTrainMatrix)
-        errAvgTrain.append(float(sum(errTrain != yTraintVec)) / len(yTraintVec))
-
-    plt.plot(learningGroups, errAvg, label='test error')
-    plt.plot(learningGroups, errAvgTrain, label='train error')
-    plt.xlabel('number of example')
-    plt.ylabel('errors')
-
-    plt.legend()
-    plt.show()
-
+    error.graph_learning_groups(XMatrix,y,optimalLambda,numAllRow,'LogisticRegression','')
 
 def errorOfmodelOptimalLmbda(optimalLambda,XMatrix, y,country_name):
     X_train, X_test, y_train, y_test = train_test_split(XMatrix, y, test_size=0.3, random_state=100)

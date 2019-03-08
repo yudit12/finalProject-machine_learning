@@ -2,6 +2,9 @@
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
+from matplotlib import pyplot as plt
+from sklearn.linear_model import LogisticRegression
+from sklearn import tree
 import numpy as np
 
 def calc_error(X_test, model, y_test,flag):
@@ -135,9 +138,7 @@ def FPR(FP,TN):
 
 # --------------------------------
 def dif_alg_errors(logistic_error,tree_errors,tree_type):
-    import numpy as np
-    from matplotlib import pyplot as plt
-    import numpy as np
+
 
 
     n_groups = 4
@@ -180,3 +181,36 @@ def dif_alg_errors(logistic_error,tree_errors,tree_type):
     fig.tight_layout()
     plt.show()
 
+def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow,model_name,type):
+    learNum=int(numAllRow*0.7)
+    learNum=int(learNum/10)*10+1
+
+    learningGroups=np.array(range(10,learNum,10))
+    errAvg = []
+    errAvgTrain=[]
+    xTestMatrix=XMatrix[learNum:]
+    yTestVec = y[learNum:]
+
+    for rowTrains in learningGroups:
+        xTrainMatrix = XMatrix[0:rowTrains]
+        yTraintVec = y[0:rowTrains]
+        if model_name== 'LogisticRegression':
+            model = LogisticRegression(C=optimalLambda, solver='lbfgs', penalty='l2').fit(xTrainMatrix, yTraintVec)
+        elif model_name=='DecisionTreeClassifier':
+            model = tree.DecisionTreeClassifier(criterion=type, random_state=100).fit(xTrainMatrix, yTraintVec)
+        errTest = model.predict(xTestMatrix)
+
+        errAvg.append(float(sum(errTest != yTestVec)) / len(yTestVec))
+
+        errTrain = model.predict(xTrainMatrix)
+        print('errTrain\n',errTrain)
+        print('y\n',yTraintVec)
+        errAvgTrain.append(float(sum(errTrain != yTraintVec)) / len(yTraintVec))
+
+    plt.plot(learningGroups, errAvg, label='test error')
+    plt.plot(learningGroups, errAvgTrain, label='train error')
+    plt.xlabel('number of example')
+    plt.ylabel('errors')
+
+    plt.legend()
+    plt.show()

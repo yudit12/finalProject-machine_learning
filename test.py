@@ -9,10 +9,11 @@ def main():
     path = 'economic_data.csv'
     df_org = pd.read_csv(path)
 
-    country_name = [' Cuba',' Philippines',' Ecuador']
+    #country_name = [' Cuba',' Philippines',' Ecuador']
+    country_name = [' ?']
     df = csv_org.filter_data_by_feature(df_org, 'native-country', country_name)
     df = df.reset_index(drop=True)
-    df.to_csv('data.csv', index=False)
+   # df.to_csv('data.csv', index=False)
 
     col_to_split = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex',
                     'native-country', 'result']
@@ -43,8 +44,14 @@ def main():
           '####      DecisionTreeClassifier    #########\n'
           '#############################################')
     dtree.changePath()
-    dtree.runAllCountries(df_org,col_to_split,country_name)
+    typeModel = "gini"  # gini/entropy
+    #dtree.runAllCountries(df_org,col_to_split,country_name,typeModel)
 
+
+    print('#############################################\n'
+          '#########     compare models    #############\n'
+          '#############################################')
+    dtree.errorTree(country_name,typeModel,df_org,col_to_split)
     lgr.errorOfmodelOptimalLmbda(optimalLambda, XMatrix, y, country_name)
     tree_type = 'entropy'
     logistic_error = (82.8, 50, 60, 54.4)
