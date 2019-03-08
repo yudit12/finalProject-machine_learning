@@ -2,7 +2,7 @@ import pandas as pd
 import csv_handle as csv_org
 import lgReg_handle as lgr
 import decision_tree_handle as dtree
-
+import error_handle as error
 
 def main():
 
@@ -46,6 +46,15 @@ def main():
     dtree.runAllCountries(df_org,col_to_split,country_name)
 
     lgr.errorOfmodelOptimalLmbda(optimalLambda, XMatrix, y, country_name)
+    tree_type = 'entropy'
+    logistic_error = (82.8, 50, 60, 54.4)
+    entropy_error = (82.7, 95.65, 84.61, 89.7)
+    error.dif_alg_errors(logistic_error, entropy_error, tree_type)
+    # ------
+    tree_type = 'gini'
+    logistic_error = (82.7, 33.3, 66.6, 44.4)
+    gini_error = (75, 66.6, 44.4, 53.3,)
+    error.dif_alg_errors(logistic_error, gini_error, tree_type)
 
 if __name__ == "__main__":
     main()
