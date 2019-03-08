@@ -60,6 +60,7 @@ def my_error_calc(matrix,x_test,flag):
      FN = matrix[1, 0]
      FP = matrix[0, 1]
      TP = matrix[1, 1]
+     #print('TN , FN, FP,  TP ',TN , FN, FP,  TP)
      right = TP + TN
      all_test = len(x_test)
      accr = accuracy(right, all_test)*100
