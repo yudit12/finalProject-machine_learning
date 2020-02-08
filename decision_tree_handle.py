@@ -109,18 +109,13 @@ def treeForCountry(country_name, X_train,y_train,data_feature_names,typeModel):
 
 
 def errorTree(country_name,typeModel,df_org,col_to_split,max_depth):
-    print('errorTree')
-    print(df_org)
 
-    print(country_name)
-
-
+    df_org = df_org.head(1000)
     if('native-country' in col_to_split):
         col_to_split.remove('native-country')
 
     XMatrix, y,X_train, X_test, y_train, y_test, data_feature_names,df=splitData(df_org, country_name, col_to_split)
-    print('XMatrix',XMatrix,'\ny', y,'\nX_train',X_train, '\nX_test', X_test,'\ny_train', y_train,'\ny_test' ,y_test)
-    df.to_csv('data1.csv', index=False)
+
     clf = tree.DecisionTreeClassifier(criterion=typeModel, random_state=100)
     clf.fit(X_train, y_train)
 

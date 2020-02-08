@@ -8,6 +8,7 @@ from sklearn.feature_selection import chi2
 def filter_data_by_feature(df,colName,feat_name):
     # from all data get data only on spesifc country
     by_country = df.loc[df[colName].isin(feat_name)]
+
     return by_country
 #-----------------------------------------------
 # returm the feat in the colum without duplicates - to know how many column  add to the df

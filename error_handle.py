@@ -138,7 +138,6 @@ def FPR(FP,TN):
 
 # --------------------------------
 
-#def dif_alg_errors(logistic_error,tree_errors,tree_type):
 
 def dif_alg_errors(logistic_error, entropy_error, gini_error):
 
@@ -213,8 +212,7 @@ def graph_learning_groups(XMatrix,y,optimalLambda,numAllRow,model_name,type,max_
         errAvg.append(float(sum(errTest != yTestVec)) / len(yTestVec))
 
         errTrain = model.predict(xTrainMatrix)
-        print('errTrain\n',errTrain)
-        print('y\n',yTraintVec)
+
         errAvgTrain.append(float(sum(errTrain != yTraintVec)) / len(yTraintVec))
 
     plt.plot(learningGroups, errAvg, label='test error')
