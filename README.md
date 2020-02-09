@@ -1,7 +1,7 @@
 
 
 
-# finalProject-machine_learning
+## finalProject-machine_learning course 
 <div dir="rtl">
 <div>
 </div>
@@ -39,6 +39,7 @@ type
 
 מכיל את כל הנתונים economic_data בנוסף הקובץ
 : classification בחרנו להתמקד ב 2 אלגוריתמים המבצעים
+
 logistic regression .1
 
 decision tree .2
